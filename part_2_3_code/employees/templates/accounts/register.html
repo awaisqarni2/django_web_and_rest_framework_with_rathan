@@ -1,0 +1,26 @@
+{% load static %} {% load crispy_forms_tags %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <h1>Register User Form</h1>
+    <form
+      method="POST"
+      enctype="multipart/form-data"
+      style="width: 40%; margin: auto"
+    >
+      {% csrf_token %} {{ form | crispy }}
+      <!-- render django form -->
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>

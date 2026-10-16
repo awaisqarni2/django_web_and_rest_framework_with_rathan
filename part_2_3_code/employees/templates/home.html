@@ -1,0 +1,58 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Employee Table</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css"
+    />
+  </head>
+  <body>
+    {% if user.is_authenticated %}
+    <h3 style="text-align: right; margin-right: 10px">
+      <a href="{% url 'logout' %}">Logout</a>
+    </h3>
+    {% else %}
+    <h3 style="text-align: center">
+      <a href="{% url 'login' %}">Login</a>&emsp;
+      <a href="{% url 'register' %}">Register</a>
+    </h3>
+    {% endif %}
+    <h1>Employee Records - Tech with Awais</h1>
+    <a href="{% url 'add_employee' %}" style="float: right; margin-right: 200px"
+      >Add Employee</a
+    ><br /><br />
+    <table>
+      <tr>
+        <th>Employee Name</th>
+        <th>Email</th>
+        <th>Department</th>
+        <th>Salary</th>
+        <th>Manager</th>
+        <th>Active</th>
+        <th>Action</th>
+      </tr>
+      {% for ep in employees %}
+      <tr>
+        <td>{{ep.full_name }}</td>
+        <td>{{ep.email}}</td>
+        <td>{{ep.department }}</td>
+        <td>{{ep.salary}}</td>
+        <td>{{ep.manager}}</td>
+        <td>{{ep.is_active}}</td>
+        <td>
+          <a href="{% url 'employee_name' ep.id %}"
+            ><i class="fa fa-eye" aria-hidden="true"></i
+          ></a>
+          <a href=""><i class="fa fa-edit"></i></a>
+          <a href=""><i class="fa fa-trash"></i></a>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </body>
+</html>

@@ -1,0 +1,1547 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Django &amp; DRF with Rattan - Complete Course Notes</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+	/* Paint a complete callout box on every PDF page fragment. */
+	-webkit-box-decoration-break: clone;
+	box-decoration-break: clone;
+}
+
+/* For default-background callouts, render the border outline. */
+.callout.block-color-default_background {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+/*
+ * Toggles and callouts hold arbitrary content, so they can easily be taller
+ * than a page. They must stay breakable: avoiding breaks inside them makes
+ * Chromium push the whole block onto the next page, which leaves the previous
+ * page mostly empty before every long toggle.
+ */
+details,
+aside {
+	margin: 1.25em 0;
+}
+
+/* Keep a toggle's title on the same page as the start of its content. */
+summary {
+	page-break-after: avoid;
+	break-after: avoid;
+}
+
+/*
+ * Toggle headings render as <h1/h2/h3 style="display:inline-block"> inside
+ * <summary>. Without this reset, the heading's margin-top pushes it below the
+ * ::marker (▼), so the triangle and the title appear on separate lines.
+ */
+summary h1,
+summary h2,
+summary h3,
+summary h4 {
+	margin-top: 0;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding-inline: 0.125rem;
+	padding-block: 0.375rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+/*
+ * Render emoji icons using a ::before pseudo-element to keep the glyph
+ * out of the DOM textContent traversal. This avoids double-rendering icons
+ * in callouts and page titles.
+ * NOTE(slim/html-export-pseudo-icons): I can't tagref this because it will
+ * flag as a duplicate tag after codegen.
+ */
+.icon[data-emoji]::before {
+	content: attr(data-emoji);
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	margin-right: 0.4em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.tab {
+	margin: 1.25em 0;
+	padding-inline: 1rem;
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style><style>@import url('https://cdn.jsdelivr.net/npm/katex@0.16.25/dist/katex-swap.min.css')</style></head><body><article id="3f1e5180-b687-80d0-b5cf-d50bc83350a2" class="page sans"><header><h1 class="page-title" dir="auto">Django &amp; DRF with Rattan - Complete Course Notes</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><details id="3f1e5180-b687-80d5-9417-df15461b00d5" open="" class="toggle" dir="auto"><summary>Part 1</summary><div class="indented"><h2 id="3f1e5180-b687-80a6-bf26-d0ed5a94e7e1" class="" dir="auto">Part 1: Django Fundamentals &amp; Project Setup</h2><hr id="3f1e5180-b687-806c-a159-d8177de5565b" dir="auto"/><h3 id="3f1e5180-b687-80d4-8e3e-d689121f898e" class="" dir="auto">1. What is Django?</h3><p id="3f1e5180-b687-806b-9a94-dd2a221a2fcb" class="" dir="auto"><strong>Definition:</strong> Django is a high-level Python web framework that enables rapid development of secure and maintainable websites.</p><p id="3f1e5180-b687-8008-9f59-d95e5b6f16b8" class="" dir="auto"><strong>Key Points:</strong></p><ul id="3f1e5180-b687-8099-bedf-ecb36ff5da9d" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Follows MVT (Model-View-Template) architecture</li></ul><ul id="3f1e5180-b687-809c-8a9a-febb9ea6c3f6" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Comes with built-in admin panel</li></ul><ul id="3f1e5180-b687-80ee-8676-eb53da1c0474" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Includes ORM (Object-Relational Mapping)</li></ul><ul id="3f1e5180-b687-80b5-bca8-f290a4a8af28" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Battery-included philosophy - provides authentication, sessions, messages, etc. out of the box</li></ul><p id="3f1e5180-b687-804d-a385-f83a40036239" class="" dir="auto"><strong>Why Django?</strong></p><ul id="3f1e5180-b687-800a-a030-f899cc02ca9a" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Fast development</li></ul><ul id="3f1e5180-b687-8046-8363-e9909840c908" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Less code required</li></ul><ul id="3f1e5180-b687-806a-9c76-f76e64a392e8" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Built-in security features</li></ul><ul id="3f1e5180-b687-801f-994e-f9009a949b13" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Scalable for large applications</li></ul><hr id="3f1e5180-b687-80d2-a7aa-f28e12b21ff9" dir="auto"/><h3 id="3f1e5180-b687-80af-91dc-f69f627d41ed" class="" dir="auto">2. MVT Architecture Explained</h3><p id="3f1e5180-b687-8010-a17a-e40f2fbb5952" class="" dir="auto"><strong>MVT = Model-View-Template</strong></p><table id="3f1e5180-b687-8073-86d1-c4e7dd8f28df" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3f1e5180-b687-8089-8cdc-d8bfe3858408" dir="ltr"><th id="PI=X" class="simple-table-header-color simple-table-header">Component</th><th id="Dfv|" class="simple-table-header-color simple-table-header">Responsibility</th></tr></thead><tbody><tr id="3f1e5180-b687-80d0-9ffa-cee39f421d5a" dir="ltr"><td id="PI=X" class=""><strong>Model</strong></td><td id="Dfv|" class="">Database operations, data structure</td></tr><tr id="3f1e5180-b687-80f7-a4fb-de7521168c35" dir="ltr"><td id="PI=X" class=""><strong>View</strong></td><td id="Dfv|" class="">Business logic, request handling</td></tr><tr id="3f1e5180-b687-8043-ada9-db8ce5c455e4" dir="ltr"><td id="PI=X" class=""><strong>Template</strong></td><td id="Dfv|" class="">Presentation layer (HTML)</td></tr></tbody></table><p id="3f1e5180-b687-80ef-956a-ec49bbc41779" class="" dir="auto"><strong>Request Flow:</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="3f1e5180-b687-80dc-9263-cae0819a36dc" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">User → URL → View → Model (if DB needed) → View → Template → Response to User</code></pre><p id="3f1e5180-b687-80be-9292-e55e776630a8" class="" dir="auto"><strong>Important:</strong> Model never directly talks to Template or User. View acts as the mediator.</p><hr id="3f1e5180-b687-8071-883b-d605b354fd79" dir="auto"/><h3 id="3f1e5180-b687-800e-a9c3-c8c787b4d84f" class="" dir="auto">3. Creating Virtual Environment</h3><p id="3f1e5180-b687-8072-9c8d-d49a6873ebed" class="" dir="auto"><strong>Why Virtual Environment?</strong></p><ul id="3f1e5180-b687-80f4-93af-d79319471520" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Isolates project dependencies</li></ul><ul id="3f1e5180-b687-800e-ad4f-fb705f005b13" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Prevents package conflicts between projects</li></ul><ul id="3f1e5180-b687-8069-b304-c4d8ffc9b98d" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Keeps global Python clean</li></ul><p id="3f1e5180-b687-806e-bede-c2be0b156f38" class="" dir="auto"><strong>Commands:</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" integrity="sha512-whYhDwtTmlC/NpZlCr6PSsAaLOrfjVg/iXAnC4H/dtiHawpShhT2SlIMbpIhT/IL/NrpdMm+Hq2C13+VKpHTYw==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><pre id="3f1e5180-b687-80e3-874b-d397a1ed4d26" class="code code-wrap" data-notion-code-syntax="bash"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all"># dir      #show all directoires/folders only
+# ls       #show all files and folder in current dir
+# pip freeze   #show all install pkgs in current venv
+# Create virtual environment
+python -m venv env         # uv venv
+
+# Activate (Windows)
+env\Scripts\activate
+
+# Activate (gitbash)
+source env/Scripts/activate
+
+# Deactivate
+deactivate</code></pre><p id="3f1e5180-b687-80a0-a5f3-dcead8d41cdf" class="" dir="auto"><strong>Verify Activation:</strong> You&#x27;ll see <code>(env)</code> prefix in terminal</p><hr id="3f1e5180-b687-8035-b3d0-cc6754ccdcac" dir="auto"/><h3 id="3f1e5180-b687-808c-8acf-cfdb1b6a0069" class="" dir="auto">4. Installing Django &amp; Creating Project</h3><p id="3f1e5180-b687-8000-973d-d1eb05f3c90f" class="" dir="auto"><strong>Install Django:</strong></p><pre id="3f1e5180-b687-8073-a49e-f142f1ee0d00" class="code code-wrap" data-notion-code-syntax="bash"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">pip install django</code></pre><p id="3f1e5180-b687-80bf-b661-ccbc62ea3ba1" class="" dir="auto"><strong>Create Project:</strong></p><pre id="3f1e5180-b687-80c5-93ce-e50ccec3fdc0" class="code code-wrap" data-notion-code-syntax="bash"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">django-admin startproject project_name .  # create project
+python manage.py startapp app_name  # create app inside project</code></pre><p id="3f1e5180-b687-8036-b376-f915298763b8" class="" dir="auto"><strong>Note:</strong> The <code>.</code> at the end creates project in current directory (recommended)</p><p id="3f1e5180-b687-80ba-b3d0-d73fde9dd264" class="" dir="auto"><strong>Project Structure:</strong></p><pre id="3f1e5180-b687-807a-9c1d-e9adff156728" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">project_name/
+├── manage.py
+├── db.sqlite3
+├── project_name/
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py
+│   ├── asgi.py
+│   └── wsgi.py</code></pre><hr id="3f1e5180-b687-8070-875d-c9559ceb9a07" dir="auto"/><h3 id="3f1e5180-b687-80bb-864c-c33b95a12301" class="" dir="auto">5. Important Files Explained</h3><p id="3f1e5180-b687-80c7-a328-f48d4ae25a74" class="" dir="auto"><strong><a href="http://manage.py/">manage.py</a></strong><strong>:</strong></p><ul id="3f1e5180-b687-80aa-bd27-f61afe0600ae" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Entry point for all Django commands</li></ul><ul id="3f1e5180-b687-80ad-8f3c-cbfd82f04032" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Like a &quot;receptionist&quot; - you tell it what to do, it forwards to Django</li></ul><p id="3f1e5180-b687-8026-9c0d-ef88ba1d9d60" class="" dir="auto"><strong><a href="http://settings.py/">settings.py</a></strong><strong>:</strong></p><ul id="3f1e5180-b687-8043-a888-dd625e365a8c" class="bulleted-list" dir="auto"><li style="list-style-type:disc">All project configurations</li></ul><ul id="3f1e5180-b687-80c0-bdd2-f1a7f2117867" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Database settings, installed apps, middleware, templates, etc.</li></ul><p id="3f1e5180-b687-8096-bc08-fd8b5d709358" class="" dir="auto"><strong><a href="http://urls.py/">urls.py</a></strong><strong>:</strong></p><ul id="3f1e5180-b687-807c-8ca3-c83ab3a73009" class="bulleted-list" dir="auto"><li style="list-style-type:disc">URL routing configuration</li></ul><ul id="3f1e5180-b687-80f0-9bec-c0ce0e21f706" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Maps URLs to views</li></ul><p id="3f1e5180-b687-805b-a5d4-e8742d9b94fd" class="" dir="auto"><strong><a href="http://wsgi.py/asgi.py:">wsgi.py/asgi.py:</a></strong></p><ul id="3f1e5180-b687-80b9-a73e-ef4b0c4d6f50" class="bulleted-list" dir="auto"><li style="list-style-type:disc">HTTP server configurations</li></ul><ul id="3f1e5180-b687-804b-8178-e5c6385bd820" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Used in production deployment</li></ul><hr id="3f1e5180-b687-803a-8e1f-c397e5777a62" dir="auto"/><h3 id="3f1e5180-b687-80e6-a399-eec895dde9f1" class="" dir="auto">6. Initial Setup Commands</h3><pre id="3f1e5180-b687-800f-90b0-dea5526b8775" class="code code-wrap" data-notion-code-syntax="bash"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all"># Apply migrations (create default tables)
+python manage.py migrate
+
+# Create superuser (admin)
+python manage.py createsuperuser
+
+# Run development server
+python manage.py run server</code></pre><p id="3f1e5180-b687-8084-9a5c-c6f0cb0d697f" class="" dir="auto"><strong>Default server URL:</strong> <code>http://127.0.0.1:8000/</code></p><hr id="3f1e5180-b687-80ec-a64c-c90de4feef8c" dir="auto"/><h3 id="3f1e5180-b687-80c9-8319-d914b2a64c96" class="" dir="auto">7. Key <a href="http://settings.py/">settings.py</a> Configurations</h3><p id="3f1e5180-b687-8084-aa57-d35f5a00f0a5" class="" dir="auto"><strong>BASE_DIR:</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" integrity="sha512-AKaNmg8COK0zEbjTdMHJAPJ0z6VeNqvRvH4/d5M4sHJbQQUToMBtodq4HaV4fa+WV2UTfoperElm66c9/8cKmQ==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><pre id="3f1e5180-b687-8037-bcff-e99bd5d84aa7" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">BASE_DIR = Path(__file__).resolve().parent.parent</code></pre><p id="3f1e5180-b687-80e9-b7f5-f1d1ab413d6f" class="" dir="auto">Dynamic path to project root - works on any system</p><p id="3f1e5180-b687-803d-92db-cd46958757ac" class="" dir="auto"><strong>SECRET_KEY:</strong></p><ul id="3f1e5180-b687-800b-ba68-eef1b85985ec" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Used for signing sessions, tokens, etc.</li></ul><ul id="3f1e5180-b687-8083-b078-c8c3eccd5d2b" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Must be kept secret in production</li></ul><ul id="3f1e5180-b687-80be-a865-f5e84c246ee4" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Use environment variables in production</li></ul><p id="3f1e5180-b687-80ca-aba2-c93f809a42cd" class="" dir="auto"><strong>DEBUG:</strong></p><pre id="3f1e5180-b687-80b6-9db8-e1b00a1b11f8" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">DEBUG = True  # Development only
+DEBUG = False # Production</code></pre><ul id="3f1e5180-b687-80b7-bf40-d977c9a7e979" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>True</code>: Shows detailed error pages</li></ul><ul id="3f1e5180-b687-80db-a872-e5243ef7df60" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>False</code>: Shows standard 404/500 pages</li></ul><p id="3f1e5180-b687-8064-9228-f8dcbfc9749a" class="" dir="auto"><strong>ALLOWED_HOSTS:</strong></p><pre id="3f1e5180-b687-809f-8792-daa8e525c8ff" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">ALLOWED_HOSTS = []  # Empty in development
+ALLOWED_HOSTS = [&#x27;yourdomain.com&#x27;, &#x27;192.168.1.1&#x27;]  # Production</code></pre><p id="3f1e5180-b687-808a-b0e6-d85346112c89" class="" dir="auto"><strong>INSTALLED_APPS:</strong></p><pre id="3f1e5180-b687-8050-b34f-e58f35135f42" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">INSTALLED_APPS = [
+    &#x27;django.contrib.admin&#x27;,
+    &#x27;django.contrib.auth&#x27;,
+    &#x27;django.contrib.contenttypes&#x27;,
+    &#x27;django.contrib.sessions&#x27;,
+    &#x27;django.contrib.messages&#x27;,
+    &#x27;django.contrib.staticfiles&#x27;,
+    # Your apps here
+]</code></pre><hr id="3f1e5180-b687-8031-a401-f79dbf2a2729" dir="auto"/><h3 id="3f1e5180-b687-809c-bd13-d273121f54a0" class="" dir="auto">8. Creating Django Apps</h3><pre id="3f1e5180-b687-8092-bbda-f8164f7e127d" class="code code-wrap" data-notion-code-syntax="bash"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">python manage.py start app app_name</code></pre><p id="3f1e5180-b687-80de-8560-e197016ae88b" class="" dir="auto"><strong>App Structure:</strong></p><pre id="3f1e5180-b687-80a9-8073-d4927a88db21" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">app_name/
+├── __init__.py
+├── admin.py
+├── apps.py
+├── models.py
+├── views.py
+├── urls.py (create manually)
+├── tests.py
+└── migrations/</code></pre><p id="3f1e5180-b687-80cd-97f7-dcf1f822c4f0" class="" dir="auto"><strong>Register App in </strong><strong><a href="http://settings.py/">settings.py</a></strong><strong>:</strong></p><pre id="3f1e5180-b687-80d3-899b-d8bd9def3978" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">INSTALLED_APPS = [
+    # ...
+    &#x27;app_name&#x27;,
+]</code></pre><hr id="3f1e5180-b687-80fd-8371-f1db0a20d6eb" dir="auto"/><h3 id="3f1e5180-b687-8080-84e8-fbb2aca91c27" class="" dir="auto">9. Models - Database Tables</h3><p id="3f1e5180-b687-80d8-9717-f7184e7a67ca" class="" dir="auto"><strong>Creating a Model:</strong></p><pre id="3f1e5180-b687-800a-a145-c6e21f09d69a" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">from django.db import models
+
+class Department(models.Model):
+    name = models.CharField(max_length=25)
+    location = models.CharField(max_length=25)
+
+    def __str__(self):
+        return f&quot;{self.name} - {self.location}&quot;
+
+class Employee(models.Model):
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    email = models.EmailField(unique=True)
+    designation = models.CharField(max_length=50)
+    salary = models.IntegerField()
+    joining_date = models.DateField()
+    is_active = models.BooleanField(default=True)
+    image = models.ImageField(upload_to=&#x27;employees/&#x27;, default=&#x27;default.png&#x27;)
+
+    # Foreign Key (Many-to-One)
+    department = models.ForeignKey(
+        &#x27;Department&#x27;,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
+    # Self-referencing Foreign Key
+    manager = models.ForeignKey(
+        &#x27;self&#x27;,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
+    def __str__(self):   # member function
+        return f&quot;{self.first_name} {self.last_name}&quot;
+    
+    def full_name(self):  # virtual field
+		    return f&quot;{self.first_name} {self.last_name}&quot;</code></pre><p id="3f1e5180-b687-805a-b62e-d131dde8977d" class="" dir="auto"><strong>Common Field Types:</strong></p><table id="3f1e5180-b687-80f2-a2b7-e27920fd2de5" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3f1e5180-b687-80c4-9c70-d23b970ca4d4" dir="ltr"><th id=";?ol" class="simple-table-header-color simple-table-header">Field Type</th><th id="xGLW" class="simple-table-header-color simple-table-header">Use Case</th></tr></thead><tbody><tr id="3f1e5180-b687-80d7-a98b-cca6176e3415" dir="ltr"><td id=";?ol" class=""><code>CharField</code></td><td id="xGLW" class="">Short text (requires max_length)</td></tr><tr id="3f1e5180-b687-8009-9554-eace2ff89c0b" dir="ltr"><td id=";?ol" class=""><code>TextField</code></td><td id="xGLW" class="">Long text</td></tr><tr id="3f1e5180-b687-80ff-814c-f3c4520f5640" dir="ltr"><td id=";?ol" class=""><code>IntegerField</code></td><td id="xGLW" class="">Numbers</td></tr><tr id="3f1e5180-b687-8096-9432-fd438996579f" dir="ltr"><td id=";?ol" class=""><code>EmailField</code></td><td id="xGLW" class="">Email addresses</td></tr><tr id="3f1e5180-b687-8016-8fd4-e1474c42cf2b" dir="ltr"><td id=";?ol" class=""><code>DateField</code></td><td id="xGLW" class="">Dates</td></tr><tr id="3f1e5180-b687-8080-a916-f3585d351240" dir="ltr"><td id=";?ol" class=""><code>BooleanField</code></td><td id="xGLW" class="">True/False</td></tr><tr id="3f1e5180-b687-80a4-aa9f-c3966a9158ae" dir="ltr"><td id=";?ol" class=""><code>ImageField</code></td><td id="xGLW" class="">Images (requires Pillow)</td></tr><tr id="3f1e5180-b687-80cc-a613-f726a6b9ed32" dir="ltr"><td id=";?ol" class=""><code>ForeignKey</code></td><td id="xGLW" class="">Many-to-One relationship</td></tr></tbody></table><p id="3f1e5180-b687-8048-882f-e204eea74374" class="" dir="auto"><strong>Field Options:</strong></p><table id="3f1e5180-b687-8038-b703-f05fdac3a67a" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3f1e5180-b687-80ab-b5b1-d0cba66ee5ae" dir="ltr"><th id="quhi" class="simple-table-header-color simple-table-header">Option</th><th id="aWQ^" class="simple-table-header-color simple-table-header">Purpose</th></tr></thead><tbody><tr id="3f1e5180-b687-80d9-b470-d1b82239e275" dir="ltr"><td id="quhi" class=""><code>max_length</code></td><td id="aWQ^" class="">Maximum characters</td></tr><tr id="3f1e5180-b687-801e-b0bd-efab3f90b279" dir="ltr"><td id="quhi" class=""><code>unique=True</code></td><td id="aWQ^" class="">No duplicates allowed</td></tr><tr id="3f1e5180-b687-8022-8a34-f8d1feb9a822" dir="ltr"><td id="quhi" class=""><code>null=True</code></td><td id="aWQ^" class="">Allow NULL in database</td></tr><tr id="3f1e5180-b687-805e-a019-f5d3779b0c9a" dir="ltr"><td id="quhi" class=""><code>blank=True</code></td><td id="aWQ^" class="">Allow empty in forms</td></tr><tr id="3f1e5180-b687-8080-95ef-cada02c29bfa" dir="ltr"><td id="quhi" class=""><code>default</code></td><td id="aWQ^" class="">Default value</td></tr><tr id="3f1e5180-b687-80b0-988f-c922066d9cae" dir="ltr"><td id="quhi" class=""><code>on_delete</code></td><td id="aWQ^" class="">What happens when referenced object is deleted</td></tr></tbody></table><p id="3f1e5180-b687-8044-93c3-fe94d59ac599" class="" dir="auto"><strong>on_delete Options:</strong></p><ul id="3f1e5180-b687-80b1-8c72-cd3ad75fbfe1" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>CASCADE</code> - Delete this too</li></ul><ul id="3f1e5180-b687-80ae-9250-fbba263b4484" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>SET_NULL</code> - Set to NULL (requires null=True)</li></ul><ul id="3f1e5180-b687-806a-a8ef-c54403184f64" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>SET_DEFAULT</code> - Set to default value</li></ul><ul id="3f1e5180-b687-80c3-9d5d-fc2d226a7e21" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>PROTECT</code> - Prevent deletion</li></ul><hr id="3f1e5180-b687-8036-8923-dca094517232" dir="auto"/><h3 id="3f1e5180-b687-80f6-a3fb-e4afe39f0aff" class="" dir="auto">10. Migrations</h3><p id="3f1e5180-b687-80dd-b7cf-e6b66d8fb1ed" class="" dir="auto"><strong>What are Migrations?</strong></p><ul id="3f1e5180-b687-8058-be5a-e7ba0a4d97d6" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Instructions for database to create/modify tables</li></ul><ul id="3f1e5180-b687-80c7-bcc1-cbfe7bfee0b7" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Like &quot;blueprints&quot; for your database</li></ul><ul id="3f3e5180-b687-80b4-b434-c86ed367a2c7" class="bulleted-list" dir="auto"><li style="list-style-type:disc">when you change the model you have to run migrations, not when you change in method / member functions.</li></ul><p id="3f1e5180-b687-805a-a37a-d928ce1a0349" class="" dir="auto"><strong>Commands:</strong></p><pre id="3f1e5180-b687-8044-9e24-cbae31f947ed" class="code code-wrap" data-notion-code-syntax="bash"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all"># Create migration files (after model changes)
+python manage.py makemigrations
+
+# Apply migrations to database
+python manage.py migrate
+
+# See migration status
+python manage.py showmigrations</code></pre><p id="3f1e5180-b687-8004-9b57-fb9d3b346182" class="" dir="auto"><strong>Flow:</strong></p><pre id="3f1e5180-b687-8093-b962-dab62fd620db" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">Model Changes → makemigrations → Migration File → migrate → Database Updated</code></pre><p id="3f1e5180-b687-80e2-b728-c2aab56c7dd0" class="" dir="auto"><strong>Important:</strong> Never edit migration files manually!</p><hr id="3f1e5180-b687-8089-8dba-d2e29dc6850d" dir="auto"/><h3 id="3f1e5180-b687-80b3-a9cc-d4ee3c8889a0" class="" dir="auto">11. Admin Panel Registration</h3><pre id="3f1e5180-b687-8084-8002-e5ecccac3845" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all"># admin.py
+from django.contrib import admin
+from .models import Employee, Department
+
+# Customized registration
+class EmployeeAdmin(admin.ModelAdmin):
+    list_display = (&#x27;full_name&#x27;, &#x27;email&#x27;, &#x27;manager&#x27;, &#x27;salary&#x27;)
+    list_filter = (&#x27;department&#x27;, &#x27;is_active&#x27;)
+    search_fields = ( &#x27;full_name&#x27;, &#x27;email&#x27;)
+    list_editable = (&#x27;salary&#x27;,)
+    ordering = (&#x27;-id&#x27;,)
+
+# Basic registration
+admin.site.register(Employee, EmployeeAdmin)
+admin.site.register(Department)</code></pre><p id="3f1e5180-b687-8044-8c4f-d6563bbb3c70" class="" dir="auto"><strong>Admin Customization Options:</strong></p><table id="3f1e5180-b687-80e8-8769-f03dd593068e" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3f1e5180-b687-808b-9f14-e7c18f599e56" dir="ltr"><th id="N~Z;" class="simple-table-header-color simple-table-header">Option</th><th id="EqAB" class="simple-table-header-color simple-table-header">Purpose</th></tr></thead><tbody><tr id="3f1e5180-b687-8014-8593-cb024ce3684b" dir="ltr"><td id="N~Z;" class=""><code>list_display</code></td><td id="EqAB" class="">Columns to show in list</td></tr><tr id="3f1e5180-b687-807c-bcb0-fab7216d1461" dir="ltr"><td id="N~Z;" class=""><code>list_filter</code></td><td id="EqAB" class="">Sidebar filters</td></tr><tr id="3f1e5180-b687-8066-b294-f2eb219ed440" dir="ltr"><td id="N~Z;" class=""><code>search_fields</code></td><td id="EqAB" class="">Searchable fields</td></tr><tr id="3f1e5180-b687-80b3-b961-f1c37dad3a99" dir="ltr"><td id="N~Z;" class=""><code>list_editable</code></td><td id="EqAB" class="">Editable from list view</td></tr><tr id="3f1e5180-b687-8001-80cf-f09d46507a0b" dir="ltr"><td id="N~Z;" class=""><code>ordering</code></td><td id="EqAB" class="">Default ordering</td></tr><tr id="3f1e5180-b687-804c-a716-c9a2aebbbe2f" dir="ltr"><td id="N~Z;" class=""><code>list_display_links</code></td><td id="EqAB" class="">Clickable columns</td></tr></tbody></table><hr id="3f1e5180-b687-8034-b929-e6c1fe8525ce" dir="auto"/><h3 id="3f1e5180-b687-80ea-9401-e13df508d26c" class="" dir="auto">12. Virtual Fields in Models</h3><p id="3f1e5180-b687-8099-80a1-cca2a8efe83f" class="" dir="auto"><strong>Creating computed fields:</strong></p><pre id="3f1e5180-b687-80c7-bd8c-c5ebe6f10e88" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">class Employee(models.Model):
+    # ... fields ...
+
+    def full_name(self):
+        return f&quot;{self.first_name} {self.last_name}&quot;</code></pre><p id="3f1e5180-b687-80a7-9092-f67cfad5f78e" class="" dir="auto"><strong>Usage in Admin:</strong></p><pre id="3f1e5180-b687-8046-8052-d57d2bcaf07f" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">class EmployeeAdmin(admin.ModelAdmin):
+    list_display = (&#x27;full_name&#x27;, &#x27;email&#x27;)</code></pre><hr id="3f1e5180-b687-8014-94ff-d4b55e35038d" dir="auto"/><h3 id="3f1e5180-b687-806a-a7d3-cec19171088a" class="" dir="auto">13. URLs Configuration</h3><p id="3f1e5180-b687-80d5-88e3-d775b58cfc9e" class="" dir="auto"><strong>Project-level </strong><strong><a href="http://urls.py/">urls.py</a></strong><strong>:</strong></p><pre id="3f1e5180-b687-808e-8730-dfa372e3f0db" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path(&#x27;admin/&#x27;, admin.site.urls),
+    path(&#x27;&#x27;, include(&#x27;employees.urls&#x27;)),
+]</code></pre><p id="3f1e5180-b687-805b-8350-e4d819d2bffc" class="" dir="auto"><strong>App-level </strong><strong><a href="http://urls.py/">urls.py</a></strong><strong>:</strong></p><pre id="3f1e5180-b687-802a-aa56-c693c88ee93f" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">from django.urls import path
+from . import views
+
+urlpatterns = [
+    path(&#x27;&#x27;, views.home, name=&#x27;home&#x27;),
+    path(&#x27;add/&#x27;, views.add_employee, name=&#x27;add_employee&#x27;),
+    path(&#x27;&lt;int:id&gt;/&#x27;, views.employee_detail, name=&#x27;employee_detail&#x27;),
+]</code></pre><p id="3f1e5180-b687-80e7-89e8-ffe018ec07bf" class="" dir="auto"><strong>URL Pattern Types:</strong></p><pre id="3f1e5180-b687-80d2-b51b-c4be752c4d5b" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">path(&#x27;employees/&#x27;, view_name)           # Static
+path(&#x27;employees/&lt;int:id&gt;/&#x27;, view_name)  # Integer parameter
+path(&#x27;employees/&lt;str:name&gt;/&#x27;, view_name) # String parameter
+path(&#x27;&#x27;, include(&#x27;app.urls&#x27;))           # Include app URLs</code></pre><hr id="3f1e5180-b687-80a2-9452-dc65d0b92086" dir="auto"/><h3 id="3f1e5180-b687-80f7-bd4f-c3aa24967270" class="" dir="auto">14. Views - Function Based</h3><pre id="3f1e5180-b687-80d7-b84c-d3b8c4e3f52b" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse
+from .models import Employee
+
+def home(request):
+    employees = Employee.objects.all()
+    context = {&#x27;employees&#x27;: employees}
+    return render(request, &#x27;home.html&#x27;, context)
+
+def employee_detail(request, id):
+    employee = get_object_or_404(Employee, pk=id)
+    context = {&#x27;employee&#x27;: employee}
+    return render(request, &#x27;employee_detail.html&#x27;, context)</code></pre><p id="3f1e5180-b687-8006-ad65-f780ca723a46" class="" dir="auto"><strong>Request Methods:</strong></p><pre id="3f1e5180-b687-80a9-a425-c3af22d77249" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">def add_employee(request):
+    if request.method == &#x27;POST&#x27;:
+        # Handle form submission
+        form = EmployeeForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect(&#x27;home&#x27;)
+    else:
+        form = EmployeeForm()
+
+    context = {&#x27;form&#x27;: form}
+    return render(request, &#x27;add_employee.html&#x27;, context)</code></pre><hr id="3f1e5180-b687-807a-8bd4-d6487aa602bf" dir="auto"/><h3 id="3f1e5180-b687-80f8-880e-f413ec901235" class="" dir="auto">15. Templates</h3><p id="3f1e5180-b687-8099-bb8e-f8f9c2b750bc" class="" dir="auto"><strong>Template Configuration in </strong><strong><a href="http://settings.py/">settings.py</a></strong><strong>:</strong></p><pre id="3f1e5180-b687-80ef-b4d5-df52a1a8047f" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">TEMPLATES = [
+    {
+        &#x27;BACKEND&#x27;: &#x27;django.template.backends.django.DjangoTemplates&#x27;,
+        &#x27;DIRS&#x27;: [&#x27;templates&#x27;],  # Add this
+        &#x27;APP_DIRS&#x27;: True,
+        &#x27;OPTIONS&#x27;: {
+            &#x27;context_processors&#x27;: [
+                # ...
+            ],
+        },
+    },
+]</code></pre><p id="3f1e5180-b687-8074-9028-c3eab94db97e" class="" dir="auto"><strong>Template Tags:</strong></p><pre id="3f1e5180-b687-8000-8d2c-cc4b460a8d96" class="code code-wrap" data-notion-code-syntax="html"><code class="language-html" style="white-space:pre-wrap;word-break:break-all">&lt;!-- Variables --&gt;
+{{ variable }}
+
+&lt;!-- For Loop --&gt;
+{% for item in items %}
+    {{ item.name }}
+{% endfor %}
+
+&lt;!-- If Condition --&gt;
+{% if user.is_authenticated %}
+    &lt;p&gt;Welcome!&lt;/p&gt;
+{% else %}
+    &lt;p&gt;Please login&lt;/p&gt;
+{% endif %}
+
+&lt;!-- URL --&gt;
+&lt;a href=&quot;{% url &#x27;url_name&#x27; %}&quot;&gt;Link&lt;/a&gt;  &lt;!--url_name in urls.py path name=root --&gt;
+&lt;a href=&quot;{% url &#x27;detail&#x27; item.id %}&quot;&gt;Detail&lt;/a&gt;
+
+&lt;!-- Load Static : at the top of html file --&gt; 
+{% load static %}
+&lt;link rel=&quot;stylesheet&quot; href=&quot;{% static &#x27;css/style.css&#x27; %}&quot;&gt;
+&lt;img src=&quot;{% static &#x27;images/logo.png&#x27; %}&quot;&gt;</code></pre><hr id="3f1e5180-b687-806d-8bf3-d45168fcb41a" dir="auto"/><h3 id="3f1e5180-b687-8022-905b-e23256db8763" class="" dir="auto">16. Static Files</h3><p id="3f1e5180-b687-80c6-b439-e0f17fb2da4b" class="" dir="auto"><strong><a href="http://settings.py/">settings.py</a></strong><strong> Configuration:</strong></p><pre id="3f1e5180-b687-805f-8907-e10a778dcd57" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">STATIC_URL = &#x27;static/&#x27;
+STATICFILES_DIRS = [BASE_DIR / &#x27;static&#x27;]
+STATIC_ROOT = BASE_DIR / &#x27;staticfiles&#x27;  # For production
+
+# Create static folder in project root:
+# ├── css/style.css
+# ├── js/
+# └── images/</code></pre><p id="3f1e5180-b687-8094-b1b5-c72b10dd55c3" class="" dir="auto"><strong>Collect Static (Production only):</strong></p><pre id="3f1e5180-b687-8025-b7dc-e54dde84db89" class="code code-wrap" data-notion-code-syntax="bash"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">python manage.py collectstatic</code></pre><hr id="3f1e5180-b687-8071-bd9a-cab3a6a141a5" dir="auto"/><h3 id="3f1e5180-b687-806b-8097-cf103567369b" class="" dir="auto">17. Media Files (User Uploads)</h3><p id="3f1e5180-b687-80a1-b070-dd3f9dfddf88" class="" dir="auto"><strong><a href="http://settings.py/">settings.py</a></strong><strong> Configuration:</strong></p><pre id="3f1e5180-b687-80de-b8dc-ea93161646ef" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">MEDIA_URL = &#x27;/media/&#x27;
+MEDIA_ROOT = BASE_DIR / &#x27;media&#x27;</code></pre><p id="3f1e5180-b687-80b9-85bc-c3cec157246f" class="" dir="auto"><strong>Project </strong><strong><a href="http://urls.py/">urls.py</a></strong><strong>:  // only store media in django while debug enabled - means in dev env</strong></p><pre id="3f1e5180-b687-80bd-892c-c3a53bc473bc" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">from django.conf import settings
+from django.conf.urls.static import static 
+
+urlpatterns = [
+    # ... your patterns
+]
+
+if settings.DEBUG: # cofig media url
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) </code></pre><p id="3f1e5180-b687-80c5-95e2-cc9bd09bc410" class="" dir="auto"><strong>Model with Image:</strong></p><pre id="3f1e5180-b687-80bb-96fe-e564b3966f17" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">image = models.ImageField(upload_to=&#x27;employees/&#x27;, default=&#x27;default.png&#x27;)</code></pre><p id="3f1e5180-b687-8060-8595-fd81bb478254" class="" dir="auto"><strong>Template:</strong></p><pre id="3f1e5180-b687-805a-b8fc-c287b75a4912" class="code code-wrap" data-notion-code-syntax="html"><code class="language-html" style="white-space:pre-wrap;word-break:break-all">&lt;img src=&quot;{{ employee.image.url }}&quot; alt=&quot;{{ employee.first_name }}&quot;&gt;</code></pre><p id="3f1e5180-b687-8059-985e-dc043c40cd3c" class="" dir="auto"><strong>Form with File Upload:</strong></p><pre id="3f1e5180-b687-8070-b51d-e2a69af3b795" class="code code-wrap" data-notion-code-syntax="html"><code class="language-html" style="white-space:pre-wrap;word-break:break-all">&lt;form method=&quot;POST&quot; enctype=&quot;multipart/form-data&quot;&gt;
+    {% csrf_token %}
+    {{ form.as_p }}  &lt;!-- render django form --&gt;
+    &lt;button type=&quot;submit&quot;&gt;Submit&lt;/button&gt;
+&lt;/form&gt;</code></pre><p id="3f1e5180-b687-809f-a131-faa658ec99a6" class="" dir="auto"><strong>View with Files:</strong></p><pre id="3f1e5180-b687-806a-ae32-c0d8b542d887" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">form = EmployeeForm(request.POST, request.FILES)</code></pre><hr id="3f1e5180-b687-80ee-aea7-d8a38470d7a8" dir="auto"/><h3 id="3f1e5180-b687-80cd-9580-e4170932f1de" class="" dir="auto">18. Django Forms</h3><pre id="3f1e5180-b687-80f6-8a5e-ec0fdd149fe5" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all"># forms.py in app i.e employees app
+from django import forms
+from .models import Employee
+
+class EmployeeForm(forms.ModelForm):
+    class Meta:
+        model = Employee
+        fields = &#x27;__all__&#x27;
+        # or
+        fields = [&#x27;first_name&#x27;, &#x27;last_name&#x27;, &#x27;email&#x27;]
+
+        widgets = {
+            &#x27;joining_date&#x27;: forms.DateInput(attrs={&#x27;type&#x27;: &#x27;date&#x27;}),
+        }</code></pre><p id="3f1e5180-b687-8090-9ff5-d8dc29355e80" class="" dir="auto"><strong>Usage in View:</strong></p><pre id="3f1e5180-b687-8000-a245-e2476df53ed6" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all"># path(&#x27;add&#x27;, views.add_employee, name=&quot;add_employee&quot;) # urls.py
+def add_employee(request): #views.py
+    if request.method == &#x27;POST&#x27;:
+        form = EmployeeForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect(&#x27;home&#x27;)
+    else:
+        form = EmployeeForm()
+    return render(request, &#x27;add.html&#x27;, {&#x27;form&#x27;: form})</code></pre><hr id="3f1e5180-b687-80c0-aea0-f4c4cc8c72fc" dir="auto"/><p id="3f7e5180-b687-80af-b1d2-fce8dece5dcb" class="" dir="auto">template/add.html:</p><pre id="3f7e5180-b687-806c-b7b1-ed6c96f8d549" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">&lt;form method=&quot;POST&quot; enctype=&quot;multipart/form-data&quot;&gt;
+    {% csrf_token %}
+    {{ form.as_p }}  &lt;!-- render django form --&gt;
+    &lt;button type=&quot;submit&quot;&gt;Submit&lt;/button&gt;
+&lt;/form&gt;</code></pre><p id="3f8e5180-b687-807c-84f0-ec05890d74ad" class="" dir="auto"><strong>Bootstrap Crispy Forms in django: </strong> design ui of forms</p><ol type="i" id="3f8e5180-b687-807e-b962-c718a825ca17" class="numbered-list" start="1" dir="auto"><li>install below core pakages</li></ol><pre id="3f8e5180-b687-809e-87de-e5435b163211" class="code code-wrap" data-notion-code-syntax="powershell"><code class="language-powershell" style="white-space:pre-wrap;word-break:break-all">pip install django-crispy-forms crispy-bootstrap5</code></pre><p id="3f8e5180-b687-8086-a62a-f2518282d138" class="" dir="auto">ii. Add both packages to your <code>INSTALLED_APPS</code> and define the required template pack settings: </p><pre id="3f8e5180-b687-80f9-813f-d63e1a68f0b5" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">INSTALLED_APPS = [
+    # ... other apps
+    &quot;crispy_forms&quot;,
+    &quot;crispy_bootstrap5&quot;,
+]
+
+# Set Bootstrap 5 as the allowed and default styling
+CRISPY_TEMPLATE_PACK = &quot;bootstrap5&quot;</code></pre><p id="3f8e5180-b687-80ba-b8ca-fc5dbf9f26a1" class="" dir="auto">iii. register.html</p><pre id="3f8e5180-b687-8034-a615-df7ca363fe7a" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">
+{% load static %}
+{% load crispy_forms_tags %}     &lt;---
+&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot; /&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+    &lt;link href=&quot;https://jsdelivr.net&quot; rel=&quot;stylesheet&quot; /&gt;    &lt;---
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;{% static &#x27;css/style.css&#x27; %}&quot; /&gt;   
+    &lt;title&gt;Register Employee&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;form method=&quot;POST&quot; enctype=&quot;multipart/form-data&quot;&gt;
+      {% csrf_token %} 
+      {{ form | crispy }}         &lt;---
+      &lt;button type=&quot;submit&quot;&gt;Submit&lt;/button&gt;
+    &lt;/form&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre><h3 id="3f1e5180-b687-8024-93d8-fab4ce32d2a4" class="" dir="auto">19. Authentication System</h3><p id="3f8e5180-b687-80d5-983b-edc69b37b2fe" class="" dir="auto">Django provides a built-in authentication system that handles users, groups, permissions, and sessions.</p><p id="3f7e5180-b687-80ed-bc8c-d7ab552439f8" class="" dir="auto">we create ‘acounts’ app and not create account or user model becuase user model is auto already created. </p><p id="3f7e5180-b687-8078-b2b6-c0ed9a978532" class="" dir="auto">/register</p><p id="3f7e5180-b687-80dd-b9e0-ebcf1c9b6303" class="" dir="auto">/login</p><p id="3f7e5180-b687-8018-8431-c902c9aa7f21" class="" dir="auto">
+</p><p id="3f1e5180-b687-80ce-ac2e-e6b9d53cfae8" class="" dir="auto"><strong>Built-in Forms:</strong></p><pre id="3f1e5180-b687-806c-8c01-e26c3c41d2bc" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import login, logout, authenticate</code></pre><p id="3f1e5180-b687-80d3-a3ee-f05f0e81823d" class="" dir="auto"><strong>Registration View:</strong></p><pre id="3f1e5180-b687-80b2-9c38-ca6ee3574fba" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">def register(request):
+    if request.method == &#x27;POST&#x27;:
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(&#x27;login&#x27;)
+    else:
+        form = UserCreationForm()
+    return render(request, &#x27;register.html&#x27;, {&#x27;form&#x27;: form})</code></pre><p id="3f1e5180-b687-80dd-ac53-f7bbe186cb26" class="" dir="auto"><strong>Login View:</strong></p><pre id="3f1e5180-b687-80b9-89b0-ed3658eaeed8" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">def login_view(request):
+    if request.user.is_authenticated:
+        return redirect(&#x27;home&#x27;)
+
+    if request.method == &#x27;POST&#x27;:
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect(&#x27;home&#x27;)
+    else:
+        form = AuthenticationForm()
+    return render(request, &#x27;login.html&#x27;, {&#x27;form&#x27;: form})</code></pre><p id="3f1e5180-b687-80ad-abfe-e0e9320de542" class="" dir="auto"><strong>Logout View:</strong></p><pre id="3f1e5180-b687-804f-b5e2-d2523f984d40" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">def logout_view(request):
+    logout(request)
+    return redirect(&#x27;login&#x27;)</code></pre><hr id="3f1e5180-b687-8048-9664-f6fca9ae31ba" dir="auto"/><h3 id="3f1e5180-b687-8070-98d9-e18783980a62" class="" dir="auto">20. Login Required Decorator</h3><pre id="3f1e5180-b687-8089-9c47-c0f32fe251e5" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">from django.contrib.auth.decorators import login_required
+
+@login_required(login_url=&#x27;login&#x27;)
+def add_employee(request):
+    # Only accessible to logged-in users
+    pass</code></pre><p id="3f1e5180-b687-8000-a5b2-eee795b8aa01" class="" dir="auto"><strong><a href="http://settings.py/">settings.py</a></strong><strong>:</strong></p><pre id="3f1e5180-b687-8092-b7ec-ea4ad7b448a2" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">LOGIN_URL = &#x27;login&#x27;</code></pre><hr id="3f1e5180-b687-805b-a970-f1fab44fc359" dir="auto"/><h3 id="3f1e5180-b687-8066-808f-f2e9359a2c84" class="" dir="auto">21. Permissions &amp; Groups</h3><p id="3f1e5180-b687-8099-896c-c6cc46201ae3" class="" dir="auto"><strong>In Views:</strong></p><pre id="3f1e5180-b687-8082-b08c-d982a49226c2" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">from django.contrib.auth.decorators import permission_required
+
+@permission_required(&#x27;employees.add_employee&#x27;, raise_exception=True)
+def add_employee(request):
+    pass</code></pre><p id="3f1e5180-b687-804e-8684-e7a5590b97ff" class="" dir="auto"><strong>In Templates:</strong></p><pre id="3f1e5180-b687-804b-8dbc-c642640528f7" class="code code-wrap" data-notion-code-syntax="html"><code class="language-html" style="white-space:pre-wrap;word-break:break-all">{% if perms.employees.add_employee %}
+    &lt;a href=&quot;{% url &#x27;add_employee&#x27; %}&quot;&gt;Add Employee&lt;/a&gt;
+{% endif %}
+
+{% if perms.employees.change_employee %}
+    &lt;a href=&quot;{% url &#x27;edit_employee&#x27; employee.id %}&quot;&gt;Edit&lt;/a&gt;
+{% endif %}
+
+{% if perms.employees.delete_employee %}
+    &lt;a href=&quot;{% url &#x27;delete_employee&#x27; employee.id %}&quot;&gt;Delete&lt;/a&gt;
+{% endif %}</code></pre><p id="3f1e5180-b687-80dc-b5fc-c7c9f9797285" class="" dir="auto"><strong>Default Permissions (per model):</strong></p><ul id="3f1e5180-b687-80f3-96ff-c8f8cf64bcc5" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>add_modelname</code></li></ul><ul id="3f1e5180-b687-806a-aef5-ebcbef99bfa8" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>change_modelname</code></li></ul><ul id="3f1e5180-b687-80ac-a65c-c756788f78c1" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>delete_modelname</code></li></ul><ul id="3f1e5180-b687-8085-9bfa-f6c951177d3a" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>view_modelname</code></li></ul><p id="3f8e5180-b687-80c3-97aa-e7a9ca33980d" class="" dir="auto">example:</p><pre id="3f8e5180-b687-8000-aa2b-e7890dd9ceb9" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">@login_required(login_url=&#x27;login&#x27;)
+@permission_required(&quot;employee.add_employee&quot;, raise_exception=True)
+def add_employee(request):
+    if request.method == &#x27;POST&#x27;:
+        form = EmployeeForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect(&#x27;home&#x27;)
+    else:
+        form = EmployeeForm()
+    return render(request, &#x27;add_employee.html&#x27;, {&#x27;form&#x27;: form})</code></pre><h3 id="3f8e5180-b687-80b0-b6b2-df4f2fc90bd5" class="" dir="auto">Groups</h3><p id="3f8e5180-b687-8071-9a7e-eefb1e55104c" class="" dir="auto">Groups are collections of permissions. Assign permissions to a group, then assign users to the group.</p><p id="3f8e5180-b687-807c-9868-cb8aecf1ec38" class="" dir="auto"><strong>Admin Panel:</strong></p><ul id="3f8e5180-b687-80d7-a48c-d6ca5ee2def2" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Create groups (e.g., Manager, Editor)</li></ul><ul id="3f8e5180-b687-80f3-80cf-f4992238c787" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Assign permissions to groups</li></ul><ul id="3f8e5180-b687-8005-84fa-c40b9822f751" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Add users to groups</li></ul><p id="3f8e5180-b687-8010-9e19-e900757e07dd" class="" dir="auto"><strong>Programmatically:</strong></p><pre id="3f8e5180-b687-802e-914e-c1ea63b7c31b" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">from django.contrib.auth.models import Group, Permission
+
+# Create group
+manager_group, created = Group.objects.get_or_create(name=&#x27;Manager&#x27;)
+
+# Add permissions
+permissions = Permission.objects.filter(codename__in=[
+    &#x27;add_employee&#x27;, &#x27;change_employee&#x27;, &#x27;view_employee&#x27;
+])
+manager_group.permissions.set(permissions)
+
+# Assign user to group
+user.groups.add(manager_group)</code></pre><hr id="3f1e5180-b687-8095-a947-e9f21014fbf7" dir="auto"/><h3 id="3f1e5180-b687-80cf-aa1b-e2ea2db483ea" class="" dir="auto">22. Context Processors</h3><p id="3f1e5180-b687-80b1-86d9-f92fd2979401" class="" dir="auto"><strong>What it does:</strong> Makes variables available to ALL templates automatically</p><p id="3f1e5180-b687-80fa-99dd-e9c90a17336e" class="" dir="auto"><strong>Built-in (in </strong><strong><a href="http://settings.py/">settings.py</a></strong><strong>):</strong></p><pre id="3f1e5180-b687-8088-b3a2-cfe967d0a80e" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">&#x27;context_processors&#x27;: [
+    &#x27;django.template.context_processors.request&#x27;,
+    &#x27;django.contrib.auth.context_processors.auth&#x27;,
+    &#x27;django.contrib.messages.context_processors.messages&#x27;,
+]</code></pre><p id="3f1e5180-b687-804e-bf3f-ea8ae3ce7ecb" class="" dir="auto"><strong>Usage in any template:</strong></p><pre id="3f1e5180-b687-80e5-95e4-d0b5cbfb1cf0" class="code code-wrap" data-notion-code-syntax="html"><code class="language-html" style="white-space:pre-wrap;word-break:break-all">{% if user.is_authenticated %}
+    &lt;p&gt;Hello, {{ user.username }}&lt;/p&gt;
+{% endif %}</code></pre><hr id="3f1e5180-b687-8046-8398-e0681a5b0b0b" dir="auto"/><h3 id="3f1e5180-b687-806b-aa3c-fa8b78403f49" class="" dir="auto">23. Error Pages</h3><p id="3f1e5180-b687-801a-8648-e853cc3719c0" class="" dir="auto"><strong>Create templates:</strong></p><ul id="3f1e5180-b687-8069-bb8d-cd2ed70c46cf" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>templates/404.html</code></li></ul><ul id="3f1e5180-b687-804f-b5b1-e5c212c33c7a" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>templates/403.html</code></li></ul><ul id="3f1e5180-b687-8003-97ff-e803723b9f9f" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>templates/500.html</code></li></ul><p id="3f1e5180-b687-8034-9371-fbc9ed48a8bf" class="" dir="auto">Django automatically uses these when <code>DEBUG = False</code></p><pre id="3f1e5180-b687-80fb-8529-d5063da94495" class="code code-wrap" data-notion-code-syntax="html"><code class="language-html" style="white-space:pre-wrap;word-break:break-all">&lt;!-- 404.html --&gt;
+&lt;h1&gt;Page Not Found&lt;/h1&gt;
+&lt;p&gt;The page you&#x27;re looking for doesn&#x27;t exist.&lt;/p&gt;
+
+&lt;!-- 403.html --&gt;
+&lt;h1&gt;Access Denied&lt;/h1&gt;
+&lt;p&gt;You don&#x27;t have permission to access this page.&lt;/p&gt;</code></pre><hr id="3f1e5180-b687-8016-9949-f2c9c7b0f399" dir="auto"/><p id="3f7e5180-b687-8045-bfc9-f826c30e9d8a" class="" dir="auto">Design Admin Dashborad Design: use tool ‘jazzmin’ to change look of admin dashborad.</p><p id="3f7e5180-b687-805c-9d38-ef3423abd1ab" class="" dir="auto">Django AWS Deployment Tips: EC2, AWS Elastic Beanstalk, AWS RDS Postgres, S3 bucket. note: until your app is not big for bussiness pespective, i’m not recomend aws.</p><h2 id="3f1e5180-b687-8041-87ad-da505289be62" class="" dir="auto">Summary Cheat Sheet</h2><pre id="3f1e5180-b687-8074-a6b0-c8b9a52cfd57" class="code code-wrap" data-notion-code-syntax="bash"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all"># Virtual Environment
+python -m venv env
+source env/bin/activate  # Mac/Linux
+env\Scripts\activate     # Windows
+
+# Django Commands
+pip install django
+django-admin startproject project_name .
+python manage.py startapp app_name
+python manage.py makemigrations
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
+python manage.py collectstatic</code></pre><pre id="3f1e5180-b687-80f8-b7a1-d361f6dd06fd" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all"># Model
+	class ModelName(models.Model):
+    field = models.FieldType(options)
+    def __str__(self):
+        return self.field
+
+# View
+def view_name(request):
+    data = Model.objects.all()
+    return render(request, &#x27;template.html&#x27;, {&#x27;data&#x27;: data})
+
+# URL
+path(&#x27;route/&#x27;, views.view_name, name=&#x27;url_name&#x27;)</code></pre><hr id="3f1e5180-b687-8026-a31e-f17909a7802b" dir="auto"/><p id="3f1e5180-b687-80df-b3ae-ffcb86a2c6eb" class="" dir="auto"><strong>End of Part 1</strong></p><p id="3f1e5180-b687-80eb-9b8e-deaec34af660" class="" dir="auto"><em>Next: Part 2 will cover Django REST Framework - Serializers, Function-Based API Views, and CRUD Operations</em></p></div></details><details id="3f1e5180-b687-80dd-9475-cf16fe080ac1" open="" class="toggle" dir="auto"><summary>Part 2</summary><div class="indented"><h1 id="3f1e5180-b687-80df-a679-e249551153f5" class="" dir="auto">Part 2: Introduction to REST Framework</h1><hr id="3f1e5180-b687-808b-b9f8-ca59d02c5636" dir="auto"/><h3 id="3f1e5180-b687-8028-beb0-ebb0347fc939" class="" dir="auto">1. Introduction to APIs and REST</h3><hr id="3f1e5180-b687-8051-b1ec-cfb3ac77b65e" dir="auto"/><h3 id="3f1e5180-b687-807c-a460-ea1919d949c3" class="" dir="auto">1.1 What is an API?</h3><p id="3f1e5180-b687-8075-ac6b-e8e63a6d5ce3" class="" dir="auto"><strong>API (Application Programming Interface):</strong> A two-way communication bridge between frontend and backend.</p><ul id="3f1e5180-b687-8096-8269-d0b83eda2d7a" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>Client:</strong> Mobile app, React app, etc.</li></ul><ul id="3f1e5180-b687-8023-b9d6-c925f1cca1f8" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>Server:</strong> Django backend</li></ul><ul id="3f1e5180-b687-808f-8d99-f1914e46b0aa" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>API:</strong> Middleman that carries requests and responses</li></ul><p id="3f1e5180-b687-806f-a155-f6903c926d27" class="" dir="auto"><strong>Analogy:</strong> Restaurant – you (client) → waiter (API) → kitchen (server)</p><h3 id="3f1e5180-b687-8067-b505-c548daa9d890" class="" dir="auto">1.2 What is REST?</h3><p id="3f1e5180-b687-800f-a327-fa599f5de03f" class="" dir="auto"><strong>REST (Representational State Transfer):</strong> A set of principles for building APIs.</p><p id="3f1e5180-b687-8007-8c9c-cecc01918c63" class="" dir="auto"><strong>Key Principles:</strong></p><ul id="3f1e5180-b687-8053-b0b0-ee3e521e6c9d" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>Stateless:</strong> Server doesn&#x27;t store client state between requests</li></ul><ul id="3f1e5180-b687-806b-b8c2-d460d7a726a3" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>Client-Server:</strong> Separation of concerns</li></ul><ul id="3f1e5180-b687-8031-830c-f484769332c9" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>Uniform Interface:</strong> Standard methods (GET, POST, PUT, DELETE)</li></ul><ul id="3f1e5180-b687-80f1-97fc-da6fc91dad07" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>JSON/XML:</strong> Standard data formats</li></ul><h3 id="3f1e5180-b687-80eb-927e-f545daedbb79" class="" dir="auto">1.3 HTTP Methods</h3><table id="3f1e5180-b687-8062-9cfe-e1ad65ebf165" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3f1e5180-b687-804d-9513-caa377b7b17d" dir="ltr"><th id="bYgX" class="simple-table-header-color simple-table-header">Method</th><th id="mo@n" class="simple-table-header-color simple-table-header">Purpose</th></tr></thead><tbody><tr id="3f1e5180-b687-8049-b2e0-e1cce4bf4cba" dir="ltr"><td id="bYgX" class="">GET</td><td id="mo@n" class="">Retrieve data</td></tr><tr id="3f1e5180-b687-8006-a48c-f5146f554101" dir="ltr"><td id="bYgX" class="">POST</td><td id="mo@n" class="">Create new data</td></tr><tr id="3f1e5180-b687-8027-a3be-e4c107367793" dir="ltr"><td id="bYgX" class="">PUT</td><td id="mo@n" class="">Update existing data</td></tr><tr id="3f1e5180-b687-808c-834b-f23178d0b199" dir="ltr"><td id="bYgX" class="">DELETE</td><td id="mo@n" class="">Delete data</td></tr></tbody></table><h3 id="3f1e5180-b687-8089-9909-c1106382892c" class="" dir="auto">1.4 JSON Format</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js" integrity="sha512-QXFMVAusM85vUYDaNgcYeU3rzSlc+bTV4JvkfJhjxSHlQEo+ig53BtnGkvFTiNJh8D+wv6uWAQ2vJaVmxe8d3w==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><pre id="3f1e5180-b687-806f-aaae-edaa9b4a2671" class="code code-wrap" data-notion-code-syntax="json"><code class="language-json" style="white-space:pre-wrap;word-break:break-all">{
+    &quot;id&quot;: 1,
+    &quot;name&quot;: &quot;John Doe&quot;,
+    &quot;email&quot;: &quot;john@example.com&quot;
+}</code></pre><ul id="3f1e5180-b687-808e-a834-e523853f2b9b" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Key-value pairs</li></ul><ul id="3f1e5180-b687-8075-a207-eafd72d6fea4" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Double quotes required</li></ul><ul id="3f1e5180-b687-808d-aff4-ed3417028e3d" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Similar to Python dictionary</li></ul><hr id="3f1e5180-b687-8071-9c82-c84624713197" dir="auto"/><h2 id="3f1e5180-b687-809f-9760-ff76f9642acb" class="" dir="auto">2. Django REST Framework Setup</h2><p id="3fae5180-b687-8020-bb39-ce063f600889" class="" dir="auto">create students_main app, students app, api app. // for practice</p><h3 id="3f1e5180-b687-80b6-8d5a-e50b58e60ff1" class="" dir="auto">2.1 Install DRF</h3><pre id="3f1e5180-b687-8017-b9d7-f504aafc21d6" class="code code-wrap" data-notion-code-syntax="bash"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">pip install djangorestframework</code></pre><h3 id="3f1e5180-b687-8032-b075-f68c1a7a9b81" class="" dir="auto">2.2 Add to INSTALLED_APPS</h3><pre id="3f1e5180-b687-8088-a005-e38f59b06f92" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">INSTALLED_APPS = [   #students_main settings.py
+    # ...
+    &#x27;rest_framework&#x27;,
+]</code></pre><hr id="3f1e5180-b687-808d-955e-dd443726a29e" dir="auto"/><h2 id="3f1e5180-b687-8002-8c4c-faf1b6be3bf8" class="" dir="auto">3. Serializers</h2><p id="3f1e5180-b687-80fa-8bf9-cbccccde5828" class="" dir="auto"><strong>Serialization:</strong> Process of Converting model objects/querysets to JSON format.</p><p id="3f1e5180-b687-80e6-886e-c7369926f79a" class="" dir="auto"><strong>Deserialization:</strong> Converting JSON back to model objects.</p><h3 id="3f1e5180-b687-8055-8ff3-d733bc2e2e60" class="" dir="auto">3.1 ModelSerializer</h3><pre id="3f1e5180-b687-802e-b52b-fb0147f1db76" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all"># api/serializers.py
+from rest_framework import serializers
+from students.models import Student
+
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = &#x27;__all__&#x27;  # or list specific fields
+        # fields = [&#x27;id&#x27;, &#x27;name, &#x27;email&#x27;]</code></pre><h3 id="3f1e5180-b687-8044-b9f5-ff8479e618f3" class="" dir="auto">3.2 Using Serializer</h3><pre id="3f1e5180-b687-803d-8912-cc55bd55879d" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all"># Serialize a single object
+serializer = StudentSerializer(employee)
+serializer.data  # JSON-like dictionary
+
+# Serialize multiple objects
+serializer = StudentSerializer(employees, many=True)
+serializer.data  # List of dictionaries </code></pre><p id="3fae5180-b687-80c4-8f23-cc92ea41274c" class="" dir="auto">@api_view() rest decorator: it allow or deny the request</p><hr id="3f1e5180-b687-80f2-a7b6-ca082a4bbd9f" dir="auto"/><h2 id="3f1e5180-b687-80df-b910-fc4629dcd479" class="" dir="auto">4. Function-Based API Views</h2><h3 id="3f1e5180-b687-805f-97e7-fd7e9b848d31" class="" dir="auto">4.1 URL Configuration</h3><pre id="3f1e5180-b687-80fa-8e1d-e666b7efd6c8" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all"># project/urls.py
+path(&#x27;api/v1/&#x27;, include(&#x27;api.urls&#x27;)),
+
+# api/urls.py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path(&#x27;employees/&#x27;, views.employees_view, name=&#x27;employees&#x27;),
+    path(&#x27;students/&lt;int:pk&gt;/&#x27;, views.StudentDetailView, name=&#x27;StudentDetailView&#x27;),
+]</code></pre><h3 id="3f1e5180-b687-8022-9758-d2d5c8dad246" class="" dir="auto">4.2 GET &amp; POST (List &amp; Create)</h3><pre id="3f1e5180-b687-80b8-8283-e2905673ca9b" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from students.models import Student
+from .serializers import StudentSerializer
+
+@api_view([&#x27;GET&#x27;, &#x27;POST&#x27;])
+def StudentView(request):
+    if request.method == &#x27;GET&#x27;:
+        students= Student.objects.all()
+        serializer = StudentSerializer(students, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    elif request.method == &#x27;POST&#x27;:
+        serializer = StudentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)</code></pre><h3 id="3f1e5180-b687-80a0-80eb-f586658bb6db" class="" dir="auto">4.3 GET, PUT, DELETE (Detail)</h3><pre id="3f1e5180-b687-800e-a69f-c42aa335dd22" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">from django.shortcuts import get_object_or_404
+
+@api_view([&#x27;GET&#x27;, &#x27;PUT&#x27;, &#x27;DELETE&#x27;])
+def StudentDetailView(request, pk):
+    student = get_object_or_404(Student, pk=pk)
+
+    if request.method == &#x27;GET&#x27;:
+        serializer = StudentSerializer(student)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    elif request.method == &#x27;PUT&#x27;:
+        serializer = StudentSerializer(Student, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == &#x27;DELETE&#x27;:
+        Student.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)</code></pre><p id="3f1e5180-b687-80ba-9a39-de343a9ac988" class="" dir="auto"><strong>Key Points:</strong></p><ul id="3f1e5180-b687-80b3-8704-fbe6f8096d7b" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>@api_view</code> decorator required</li></ul><ul id="3f1e5180-b687-807e-9863-db76ba6e1f9d" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>request.data</code> for incoming data</li></ul><ul id="3f1e5180-b687-805a-8642-cc5d8224d334" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>serializer.data</code> for outgoing data</li></ul><ul id="3f1e5180-b687-80e1-8eca-e10b35d6c099" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Always return status codes</li></ul><hr id="3f1e5180-b687-8089-b3fc-fa6099ef07ec" dir="auto"/><h2 id="3f1e5180-b687-8052-8310-c6ae238ff45d" class="" dir="auto">5. Class-Based API Views (APIView)</h2><p id="3fae5180-b687-80c2-9c71-f694f028e659" class="" dir="auto">provide more structured and organized way to handle requests using object-oriented principles. no if/else needed, only get, post, put, delete </p><p id="3fae5180-b687-8099-9ac7-c525171d63f3" class="" dir="auto">create employees app &amp; its model with fields emp_id, name, designation.</p><h3 id="3f1e5180-b687-80c0-a854-c6d83fb07ba9" class="" dir="auto">5.1 List &amp; Create</h3><pre id="3f1e5180-b687-8004-96a8-fc3de2c1e425" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+
+class EmployeesView(APIView):
+    def get(self, request):
+        employees = Employee.objects.all()
+        serializer = EmployeeSerializer(employees, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        serializer = EmployeeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)</code></pre><h3 id="3f1e5180-b687-80f9-90c7-e9097f8b7d4e" class="" dir="auto">5.2 Detail (GET, PUT, DELETE)</h3><pre id="3f1e5180-b687-80e6-9308-f26dd1f9d789" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">class EmployeeDetailView(APIView):
+    def get_object(self, pk):
+        return get_object_or_404(Employee, pk=pk)
+
+    def get(self, request, pk):
+        employee = self.get_object(pk)
+        serializer = EmployeeSerializer(employee)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request, pk):
+        employee = self.get_object(pk)
+        serializer = EmployeeSerializer(employee, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+	        employee = self.get_object(pk)
+        employee.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)</code></pre><h3 id="3f1e5180-b687-8066-94b2-f8c0c63463d8" class="" dir="auto">5.3 URL Configuration</h3><pre id="3f1e5180-b687-805c-89c7-fc17b6267875" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">path(&#x27;employees/&#x27;, views.EmployeesView.as_view(), name=&#x27;employees&#x27;),
+path(&#x27;employees/&lt;int:pk&gt;/&#x27;, views.EmployeeDetailView.as_view(), name=&#x27;employee_detail&#x27;),</code></pre><p id="3f1e5180-b687-80a2-a999-e3ba65ec57da" class="" dir="auto"><strong>Note:</strong> Must use <code>.as_view()</code> for class-based views.</p><hr id="3f1e5180-b687-809f-ad6c-f51d8cb22241" dir="auto"/><h2 id="3f1e5180-b687-80eb-9f80-d875f9869725" class="" dir="auto">6. Mixins and Generics ( use for common crud operations)</h2><p id="3f1e5180-b687-8090-9b07-daf442b1c213" class="" dir="auto">Mixins are reusable code classes in object-oriented programming that provide reusable built-in functionality for common CRUD operations. In RDF, mixins are used to add common functionality to views. i.e .list(), .create(), update(), delete().</p><h3 id="3f1e5180-b687-8086-9252-e6eefea18d40" class="" dir="auto">6.1 Available Mixins</h3><table id="3f1e5180-b687-8042-8cc6-c1f34bad24dd" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3f1e5180-b687-8024-8ad1-ec567ac6d103" dir="ltr"><th id="bb\`" class="simple-table-header-color simple-table-header">Mixin</th><th id="z[XP" class="simple-table-header-color simple-table-header">Provides</th><th id="WwxP" class="simple-table-header-color simple-table-header">what it do</th></tr></thead><tbody><tr id="3f1e5180-b687-8041-8803-c45059b184c6" dir="ltr"><td id="bb\`" class=""><code>ListModelMixin</code></td><td id="z[XP" class=""><code>.list()</code></td><td id="WwxP" class="">list of objects</td></tr><tr id="3f1e5180-b687-80de-8aa5-cdb6891c99a9" dir="ltr"><td id="bb\`" class=""><code>CreateModelMixin</code></td><td id="z[XP" class=""><code>.create()</code></td><td id="WwxP" class=""></td></tr><tr id="3f1e5180-b687-8007-be56-dcd335d13dd1" dir="ltr"><td id="bb\`" class=""><code>RetrieveModelMixin</code></td><td id="z[XP" class=""><code>.retrieve()</code></td><td id="WwxP" class="">return single instance</td></tr><tr id="3f1e5180-b687-80ad-8b2b-ebbcbb14b0a0" dir="ltr"><td id="bb\`" class=""><code>UpdateModelMixin</code></td><td id="z[XP" class=""><code>.update()</code></td><td id="WwxP" class=""></td></tr><tr id="3f1e5180-b687-80ef-8a9f-c8a0879ea6fc" dir="ltr"><td id="bb\`" class=""><code>DestroyModelMixin</code></td><td id="z[XP" class=""><code>.destroy()</code></td><td id="WwxP" class=""></td></tr></tbody></table><h3 id="3f1e5180-b687-8023-bf06-f7a3cd7295a5" class="" dir="auto">6.2 GenericAPIView</h3><p id="3f1e5180-b687-804d-bb19-c5ddd5ae850b" class="" dir="auto">mixins only work with GenericAPIView. generics will come with request methods i.e get, post, put, delete</p><p id="3fbe5180-b687-8073-b5b9-c20200f40f77" class="" dir="auto">class Employees(mixins, <mark class="highlight-red" data-notion-highlight="red">generics.GenericAPIView</mark>)</p><p id="3fbe5180-b687-80a8-97e5-f883c53f3005" class="" dir="auto">get( ), post( ), put ( ), delete( )</p><p id="3fbe5180-b687-8037-a44a-dd0e3b31272c" class="" dir="auto">Provides:</p><ul id="3fbe5180-b687-80ac-bbef-e10f1fd01a52" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>queryset</code> attribute</li></ul><ul id="3fbe5180-b687-8077-b255-f5dda08eaebf" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>serializer_class</code> attribute</li></ul><ul id="3fbe5180-b687-8014-9db2-f6ab01b3848f" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>get_object()</code> method</li></ul><p id="3fbe5180-b687-801b-9edf-ed9501e66050" class="" dir="auto">brief note:<div class="indented"><p id="3fbe5180-b687-8060-898e-fadc07addc61" class="" dir="auto">mixins will come with mixins classes and generics will come with request methods and provide views.</p></div></p><h3 id="3f1e5180-b687-8074-b796-c0d725688e3c" class="" dir="auto">6.3 Example: List &amp; Create</h3><pre id="3f1e5180-b687-80aa-aba5-ee6b97f52d5a" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">from rest_framework import mixins, generics
+
+class EmployeesView(mixins.ListModelMixin,
+                    mixins.CreateModelMixin,
+                    generics.GenericAPIView):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
+
+    def get(self, request):
+        return self.list(request)
+
+    def post(self, request):
+        return self.create(request)</code></pre><h3 id="3f1e5180-b687-8065-acb2-dfdc3c0543d8" class="" dir="auto">6.4 Example: Detail (Retrieve, Update, Destroy)</h3><pre id="3f1e5180-b687-80c4-9a65-f98cee465cc5" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">class EmployeeDetailView(mixins.RetrieveModelMixin,
+                         mixins.UpdateModelMixin,
+                         mixins.DestroyModelMixin,
+                         generics.GenericAPIView):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
+
+    def get(self, request, pk):
+        return self.retrieve(request, pk)
+
+    def put(self, request, pk):
+        return self.update(request, pk)
+
+    def delete(self, request, pk):
+        return self.destroy(request, pk)</code></pre><h3 id="3f1e5180-b687-8065-985a-c2fc9fd38fd4" class="" dir="auto">6.5 Even Shorter: Generic Classes</h3><p id="3f1e5180-b687-809c-9052-eaa7b158adc8" class="" dir="auto">DRF provides pre-built generic classes that combine mixins:</p><p id="3fbe5180-b687-8032-afdd-e7c7a3920752" class="block-color-red" data-notion-highlight="red" dir="auto">ListAPIView  <mark class="highlight-default" data-notion-highlight="default">—&gt; For listing the objects</mark></p><p id="3fbe5180-b687-8020-a86c-d8fa1054719b" class="" dir="auto"><mark class="highlight-red" data-notion-highlight="red">CreateAPIView</mark> —&gt; For creating the objects</p><p id="3fbe5180-b687-80bc-8e1d-c2f587430e5a" class="" dir="auto"><mark class="highlight-red" data-notion-highlight="red">RetrieveAPIView </mark>—&gt; For retrieving a single object using pk</p><p id="3fbe5180-b687-8083-a5dc-fa0181e0e637" class="" dir="auto"><mark class="highlight-red" data-notion-highlight="red">UpdateAPIView</mark> —&gt; For updating a single object using pk</p><p id="3fbe5180-b687-806b-9038-ce8cdcb6595f" class="" dir="auto"><mark class="highlight-red" data-notion-highlight="red">DestroyAPIView </mark>—&gt; For deleting an object using pk</p><p id="3fbe5180-b687-8096-bc0c-c471b54bd515" class="" dir="auto">
+</p><p id="3fbe5180-b687-805b-a44f-f7a7675f5779" class="" dir="auto"><mark class="highlight-red" data-notion-highlight="red">ListCreateAPIView</mark> —&gt; For listing and creating objects</p><p id="3fbe5180-b687-80ee-9e2c-e39d16cf2dac" class="" dir="auto"><mark class="highlight-red" data-notion-highlight="red">RetrieveUpdateAPIView</mark> —&gt; For retrieving &amp; updating objects using pk</p><p id="3fbe5180-b687-8077-ac81-d43f1cf9bda7" class="" dir="auto"><mark class="highlight-red" data-notion-highlight="red">RetrieveUpdateDestroyAPIView </mark>—&gt; For retrieving, updating &amp; deleting objects using pk</p><pre id="3f1e5180-b687-80de-9553-c376af5a49c9" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">from rest_framework import generics
+
+# List + Create
+class EmployeesView(generics.ListCreateAPIView):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
+
+# Retrieve + Update + Destroy
+class EmployeeDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
+    lookup_field = &#x27;pk&#x27; #optional / if lookup_field are different name</code></pre><p id="3f1e5180-b687-8018-b2c7-d7dbb472d591" class="" dir="auto"><strong>URLs:</strong></p><pre id="3f1e5180-b687-8072-ba5f-d2bb53cc939e" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">path(&#x27;employees/&#x27;, views.EmployeesView.as_view()),
+path(&#x27;employees/&lt;int:pk&gt;/&#x27;, views.EmployeeDetailView.as_view()),</code></pre><p id="3f1e5180-b687-805b-86f0-c66fac2087ce" class="" dir="auto"><strong>This is the most concise way to build CRUD APIs!</strong></p><p id="3fbe5180-b687-8000-936c-cf4b4febd18d" class="" dir="auto">
+</p><p id="3fbe5180-b687-80d9-bf49-c1ab7ca93ec9" class="" dir="auto"><strong>Recomemded: Functional Based API Views</strong> are recommended for complex api logic.</p><hr id="3f1e5180-b687-80bc-b3ca-c3761961d6bc" dir="auto"/><h2 id="3f1e5180-b687-80db-ad86-e74779946f1b" class="" dir="auto">Summary Cheat Sheet</h2><pre id="3f1e5180-b687-80e1-bc9a-d5c04bd5031f" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all"># Serializer
+class MySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MyModel
+        fields = &#x27;__all__&#x27;
+
+# Function-Based API
+@api_view([&#x27;GET&#x27;, &#x27;POST&#x27;])
+def view_name(request):
+    if request.method == &#x27;GET&#x27;:
+        data = Model.objects.all()
+        serializer = MySerializer(data, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    elif request.method == &#x27;POST&#x27;:
+        serializer = MySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Class-Based API
+class MyView(APIView):
+    def get(self, request):
+        ...
+    def post(self, request):
+        ...
+    def put(self, request, pk):
+        ...
+    def delete(self, request, pk):
+        ...
+
+# Generic (Shortest)
+class MyListCreateView(generics.ListCreateAPIView):
+    queryset = Model.objects.all()
+    serializer_class = MySerializer
+
+class MyDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Model.objects.all()
+    serializer_class = MySerializer</code></pre><hr id="3f1e5180-b687-8026-bc92-fb15266311dc" dir="auto"/><p id="3f1e5180-b687-80db-a26b-f391bf356d58" class="" dir="auto"><strong>End of Part 2</strong></p><p id="3f1e5180-b687-8005-8380-e4cfb803c168" class="" dir="auto"><em>Next: Part 3 will cover advanced DRF topics: ViewSets, Routers, Authentication (JWT), Permissions in DRF, and Deployment.</em></p></div></details><details id="3f1e5180-b687-8052-9053-dd63be2768d6" open="" class="toggle" dir="auto"><summary>Part 3</summary><div class="indented"><h1 id="3f1e5180-b687-80a1-9c56-ef05407978e2" class="" dir="auto">Part 3: ViewSets, Routers &amp; What&#x27;s Next in DRF</h1><blockquote id="3f1e5180-b687-803b-9303-d8b648d65d6a" class="" dir="auto"><strong>Note:</strong> The provided transcript ends at <strong>Mixins &amp; Generics</strong>. Topics like ViewSets, Routers, JWT Authentication, and DRF Permissions are mentioned by the instructor as &quot;coming next&quot; but are <strong>not fully taught</strong> in this transcript. Below is a <strong>conceptual overview</strong> of those topics based on the instructor&#x27;s mentions, so you have a complete picture. Full notes on these will require the next sessions.</blockquote><hr id="3f1e5180-b687-8003-a947-f47e371813d5" dir="auto"/><h2 id="3f1e5180-b687-803c-a977-ccc9d836ee6b" class="" dir="auto">1. Why ViewSets? (From the Instructor&#x27;s Perspective)</h2><p id="3f1e5180-b687-80fd-aa09-f94db13fbdcb" class="" dir="auto">The instructor repeatedly states:</p><blockquote id="3f1e5180-b687-80b0-bd7a-f2886c21f925" class="" dir="auto"><em>&quot;Next view sets will come — the view set will just act like magic. Only three lines of code, everything will be done.&quot;</em></blockquote><p id="3f1e5180-b687-80b5-8e17-c56f7c4740e8" class="" dir="auto"><strong>Goal of ViewSets:</strong></p><ul id="3f1e5180-b687-807a-a003-f7beb7e31a06" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Combine all CRUD operations into a <strong>single class</strong></li></ul><ul id="3f1e5180-b687-80bb-b9ea-e4c500ac753b" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Reduce code from ~30 lines (mixins) to <strong>~3 lines</strong></li></ul><ul id="3f1e5180-b687-806c-ad59-f9aee3e5f89b" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Handle both list-level and detail-level operations in one place</li></ul><hr id="3f1e5180-b687-8002-9995-c6b606a9ebfa" dir="auto"/><h2 id="3f1e5180-b687-805a-99dd-c2cac00dfdc3" class="" dir="auto">2. ViewSets (Concept Overview)</h2><h3 id="3f1e5180-b687-806e-8d61-f1730316e422" class="" dir="auto">2.1 What is a ViewSet?</h3><p id="3f1e5180-b687-8071-97fe-fb1d9a82625e" class="" dir="auto">A <strong>ViewSet</strong> is a class-based view that provides actions for CRUD operations without defining separate <code>get()</code>, <code>post()</code>, <code>put()</code>, <code>delete()</code> methods. Instead, it provides <strong>actions</strong> like:</p><table id="3f1e5180-b687-800c-aad6-c9789a513b7b" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3f1e5180-b687-80d2-ad19-d38cd48346f2" dir="ltr"><th id="CjeO" class="simple-table-header-color simple-table-header">Action</th><th id="^QGa" class="simple-table-header-color simple-table-header">Maps to HTTP Method</th></tr></thead><tbody><tr id="3f1e5180-b687-8084-928d-efd1cd1c42eb" dir="ltr"><td id="CjeO" class=""><code>list()</code></td><td id="^QGa" class="">GET (all)</td></tr><tr id="3f1e5180-b687-807b-8c86-e0122603f2bb" dir="ltr"><td id="CjeO" class=""><code>create()</code></td><td id="^QGa" class="">POST</td></tr><tr id="3f1e5180-b687-8027-9d65-e5bc70a42ab5" dir="ltr"><td id="CjeO" class=""><code>retrieve()</code></td><td id="^QGa" class="">GET (single)</td></tr><tr id="3f1e5180-b687-80dd-b5e0-c69dc4661b00" dir="ltr"><td id="CjeO" class=""><code>update()</code></td><td id="^QGa" class="">PUT</td></tr><tr id="3f1e5180-b687-80bc-9a6e-c00574526be1" dir="ltr"><td id="CjeO" class=""><code>partial_update()</code></td><td id="^QGa" class="">PATCH</td></tr><tr id="3f1e5180-b687-80c8-87a6-f272811f1b76" dir="ltr"><td id="CjeO" class=""><code>destroy()</code></td><td id="^QGa" class="">DELETE</td></tr></tbody></table><pre id="3fbe5180-b687-80e8-935a-f18c886248cc" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">#api/views.py   viewset: allow write all method in single class and
+# using router you don&#x27;t need to write all endpoints url in urls.py 
+cass EmployeeViewSet(viewsets.ViewSet):
+    def list(self, request):
+        employees = Employee.objects.all()
+        serializer = EmployeeSerializer(employees, many=True)
+        return Response(serializer.data)
+
+    def create(self, request):
+        serializer = EmployeeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors)
+
+    def retrieve(self, request, pk):
+        employee = get_object_or_404(Employee, pk=pk)
+        serializer = EmployeeSerializer(employee)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def update(self, request, pk):
+        employee = get_object_or_404(Employee, pk=pk)
+        serializer = EmployeeSerializer(employee, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)</code></pre><h3 id="3f1e5180-b687-80c4-b6c4-ee77c20ddd55" class="" dir="auto">2.2 ModelViewSet (Most Common) </h3><pre id="3f1e5180-b687-8040-b5cd-cdc76b06cd28" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">from rest_framework import viewsets
+
+class EmployeeViewSet(viewsets.ModelViewSet):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer</code></pre><p id="3f1e5180-b687-80a9-bba7-e6a18d3e75f2" class="" dir="auto"><strong>That&#x27;s it — 3 lines.</strong> This handles GET, POST, PUT, PATCH, DELETE automatically.</p><h3 id="3f1e5180-b687-805f-9aad-c4cbb79f8d81" class="" dir="auto">2.3 ReadOnlyModelViewSet</h3><p id="3f1e5180-b687-80a0-a159-c00404ddba60" class="" dir="auto">For read-only APIs (only GET):</p><pre id="3f1e5180-b687-8069-bbeb-f75e32231232" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">class EmployeeReadOnlyViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer</code></pre><hr id="3f1e5180-b687-8071-8141-f94c0d9fe125" dir="auto"/><h2 id="3f1e5180-b687-808d-baff-dbcec630734f" class="" dir="auto">3. Routers (Concept Overview)</h2><p id="3f1e5180-b687-800c-9c6f-e36dad8fb796" class="" dir="auto">When using ViewSets, you don&#x27;t write <code>path()</code> manually. Instead, you use a <strong>Router</strong> that auto-generates URLs.</p><h3 id="3f1e5180-b687-8046-9147-d3ec5f9053fe" class="" dir="auto">3.1 DefaultRouter</h3><pre id="3f1e5180-b687-80ff-b799-eace2581b759" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">from rest_framework.routers import DefaultRouter
+from .views import EmployeeViewSet
+
+router = DefaultRouter()
+router.register(&#x27;employees&#x27;, EmployeeViewSet, basename=&#x27;employees&#x27;)
+
+urlpatterns = router.urls</code></pre><h3 id="3f1e5180-b687-807b-ae15-df7ce222435f" class="" dir="auto">3.2 Auto-Generated URLs</h3><table id="3f1e5180-b687-80e5-a0bb-f0f597064f10" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3f1e5180-b687-80fe-9886-da8e9a0817f3" dir="ltr"><th id="QD&lt;P" class="simple-table-header-color simple-table-header">URL</th><th id="oY_|" class="simple-table-header-color simple-table-header">Method</th><th id="Ps&lt;?" class="simple-table-header-color simple-table-header">Action</th></tr></thead><tbody><tr id="3f1e5180-b687-8058-8e66-d5c8e40527e2" dir="ltr"><td id="QD&lt;P" class=""><code>/employees/</code></td><td id="oY_|" class="">GET</td><td id="Ps&lt;?" class="">list</td></tr><tr id="3f1e5180-b687-8071-b1ae-da5ceee1513b" dir="ltr"><td id="QD&lt;P" class=""><code>/employees/</code></td><td id="oY_|" class="">POST</td><td id="Ps&lt;?" class="">create</td></tr><tr id="3f1e5180-b687-8092-bc84-fb403d209000" dir="ltr"><td id="QD&lt;P" class=""><code>/employees/&lt;pk&gt;/</code></td><td id="oY_|" class="">GET</td><td id="Ps&lt;?" class="">retrieve</td></tr><tr id="3f1e5180-b687-8086-8484-d079dd40db83" dir="ltr"><td id="QD&lt;P" class=""><code>/employees/&lt;pk&gt;/</code></td><td id="oY_|" class="">PUT</td><td id="Ps&lt;?" class="">update</td></tr><tr id="3f1e5180-b687-8049-a7c5-fb4c3316273d" dir="ltr"><td id="QD&lt;P" class=""><code>/employees/&lt;pk&gt;/</code></td><td id="oY_|" class="">PATCH</td><td id="Ps&lt;?" class="">partial_update</td></tr><tr id="3f1e5180-b687-8077-b55a-f6061788cbc6" dir="ltr"><td id="QD&lt;P" class=""><code>/employees/&lt;pk&gt;/</code></td><td id="oY_|" class="">DELETE</td><td id="Ps&lt;?" class="">destroy</td></tr></tbody></table><p id="3f1e5180-b687-8091-9098-ea607e4b32de" class="" dir="auto"><strong>No manual URL patterns needed!</strong></p><hr id="3f1e5180-b687-80ed-a9cc-de25a4475a08" dir="auto"/><h2 id="3f1e5180-b687-80c1-9421-f4e094a6b176" class="" dir="auto">4. Comparison: All Approaches Side-by-Side</h2><table id="3f1e5180-b687-80c7-9aec-f4a74a400e24" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3f1e5180-b687-8092-b66a-e26d7c50d6e4" dir="ltr"><th id="PZ?X" class="simple-table-header-color simple-table-header">Approach</th><th id="vsGB" class="simple-table-header-color simple-table-header">Lines of Code</th><th id="w&lt;ib" class="simple-table-header-color simple-table-header">Control</th><th id="UX~\" class="simple-table-header-color simple-table-header">Best For</th></tr></thead><tbody><tr id="3f1e5180-b687-806d-ae6d-fae8e8dffe7d" dir="ltr"><td id="PZ?X" class="">Function-Based</td><td id="vsGB" class="">~30</td><td id="w&lt;ib" class="">Full</td><td id="UX~\" class="">Custom logic, complex business rules</td></tr><tr id="3f1e5180-b687-8014-a5d7-ecb928454f4d" dir="ltr"><td id="PZ?X" class="">APIView</td><td id="vsGB" class="">~25</td><td id="w&lt;ib" class="">Full</td><td id="UX~\" class="">Custom logic with class organization</td></tr><tr id="3f1e5180-b687-8058-8bd7-c217d7bc5cab" dir="ltr"><td id="PZ?X" class="">Mixins + Generics</td><td id="vsGB" class="">~15</td><td id="w&lt;ib" class="">Moderate</td><td id="UX~\" class="">Common CRUD with some customization</td></tr><tr id="3f1e5180-b687-80f3-98f6-c680a48cf611" dir="ltr"><td id="PZ?X" class="">Generic Classes</td><td id="vsGB" class="">~5</td><td id="w&lt;ib" class="">Low</td><td id="UX~\" class="">Standard CRUD</td></tr><tr id="3f1e5180-b687-8038-989c-d2b5564ecfc7" dir="ltr"><td id="PZ?X" class="">ViewSets + Routers</td><td id="vsGB" class="">~3</td><td id="w&lt;ib" class="">Lowest</td><td id="UX~\" class="">Standard CRUD, quick APIs</td></tr></tbody></table><p id="3f1e5180-b687-8077-8f6c-f848a5eb186e" class="" dir="auto"><strong>Instructor&#x27;s Advice:</strong></p><blockquote id="3f1e5180-b687-80f5-aca5-c77396db2579" class="" dir="auto"><em>&quot;As a senior developer, mostly we choose mixins... If logic is very complex, use APIView. If standard CRUD, use ViewSets.&quot;</em></blockquote><hr id="3f1e5180-b687-808b-ba70-c7065d85c04f" dir="auto"/><h2 id="3f1e5180-b687-80bd-a423-eac1db94bed5" class="" dir="auto">5. JWT Authentication (Concept Overview)</h2><h3 id="3f1e5180-b687-80c3-b367-e20541229652" class="" dir="auto">5.1 What is JWT?</h3><p id="3f1e5180-b687-8066-a61e-e816b4137190" class="" dir="auto"><strong>JWT (JSON Web Token):</strong> A token-based authentication system for APIs.</p><ul id="3f1e5180-b687-80c1-9f0b-f244cb9361dd" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>Access Token:</strong> Short-lived (e.g., 5–15 min) </li></ul><ul id="3f1e5180-b687-8063-8456-e1570b0820bf" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>Refresh Token:</strong> Long-lived (e.g., 7 days)</li></ul><h3 id="3f1e5180-b687-80a8-987b-f79bb7721f51" class="" dir="auto">5.2 Flow</h3><pre id="3f1e5180-b687-8048-9f1f-fe6b8c16ef72" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">1. User logs in with username/password
+2. Server returns Access Token + Refresh Token
+3. Client stores tokens
+4. Client sends Access Token in Authorization header for each request
+5. When Access Token expires, client uses Refresh Token to get new Access Token</code></pre><h3 id="3f1e5180-b687-800b-b2cd-ce51f6fc15bc" class="" dir="auto">5.3 Header Format</h3><pre id="3f1e5180-b687-80e0-a2cc-e4863e9ab392" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">Authorization: Bearer &lt;access_token&gt;</code></pre><h3 id="3f1e5180-b687-8058-b381-d20390b814a9" class="" dir="auto">5.4 hands-on guide for jwt authentication</h3><p id="3fbe5180-b687-8022-addd-cbedc8783de9" class="" dir="auto"><strong>1. Installation</strong></p><p id="3fbe5180-b687-80ee-94a1-fb4ba4ab93d5" class="" dir="auto">Install the package using <code>pip</code>. If you plan to use digital signature algorithms like RSA or ECDSA, install it with the <code>crypto</code> extra: </p><pre id="3fbe5180-b687-807e-a455-ee897d9e4888" class="code code-wrap" data-notion-code-syntax="powershell"><code class="language-powershell" style="white-space:pre-wrap;word-break:break-all">pip install djangorestframework-simplejwt[crypto]</code></pre><p id="3fbe5180-b687-8031-906c-fba0d2df58a2" class="" dir="auto"><strong>2. Configure DRF Settings</strong></p><p id="3fbe5180-b687-805b-ad68-c223d094c76d" class="" dir="auto">Register the plugin as a default authentication class in your <code>settings.py</code> file: </p><pre id="3fbe5180-b687-8006-84e6-f36a88b70e23" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">REST_FRAMEWORK = {
+    &#x27;DEFAULT_AUTHENTICATION_CLASSES&#x27;: (
+        &#x27;rest_framework_simplejwt.authentication.JWTAuthentication&#x27;,
+    )
+}</code></pre><p id="3fbe5180-b687-80a3-8c0b-cd5fc4106859" class="" dir="auto"><strong>3. Set Up Route Endpoints</strong></p><p id="3fbe5180-b687-80a5-8891-f9416ef59e0d" class="" dir="auto">Map out the token routes in your project&#x27;s main <code>urls.py</code> file to handle log-ins and token life cycles.</p><pre id="3fbe5180-b687-808d-b451-d1dfa7986571" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">from django.urls import path
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView,
+)
+
+urlpatterns = [
+    # Login endpoint: Sends username/password -&gt; returns Access &amp; Refresh tokens
+    path(&#x27;api/token/&#x27;, TokenObtainPairView.as_view(), name=&#x27;token_obtain_pair&#x27;),
+    
+    # Refresh endpoint: Sends Refresh token -&gt; returns new Access token
+    path(&#x27;api/token/refresh/&#x27;, TokenRefreshView.as_view(), name=&#x27;token_refresh&#x27;),
+    
+    # Optional verification endpoint: Validates an existing token
+    path(&#x27;api/token/verify/&#x27;, TokenVerifyView.as_view(), name=&#x27;token_verify&#x27;),
+]</code></pre><p id="3fbe5180-b687-804c-b7da-ecbd37beea4f" class="" dir="auto"><strong>⚙️ Common Configuration Setting</strong></p><p id="3fbe5180-b687-8062-afd9-e41d2e9dc7cf" class="" dir="auto">You can customize token behavior by defining a <code>SIMPLE_JWT</code> block in your <code>settings.py</code>. Here is a production-safe baseline.</p><pre id="3fbe5180-b687-8016-b1b3-f33ee85ffe30" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">from datetime import timedelta
+
+SIMPLE_JWT = {
+    &#x27;ACCESS_TOKEN_LIFETIME&#x27;: timedelta(minutes=15),   # Short lifespan for security
+    &#x27;REFRESH_TOKEN_LIFETIME&#x27;: timedelta(days=7), # Longer lifespan to stay loggedin
+    &#x27;ROTATE_REFRESH_TOKENS&#x27;: True,       # Issue a new refresh token on every usage
+    &#x27;BLACKLIST_AFTER_ROTATION&#x27;: True,   # Destroys the old refresh token (Requires blacklist app)
+    
+    &#x27;ALGORITHM&#x27;: &#x27;HS256&#x27;,
+    &#x27;AUTH_HEADER_TYPES&#x27;: (&#x27;Bearer&#x27;,)#Expected header: Authorization: Bearer &lt;token&gt;
+}</code></pre><p id="3fbe5180-b687-80ad-8fb1-df4a7c596dce" class="" dir="auto"><strong>🔒 Core Features</strong></p><ul id="3fbe5180-b687-80e6-9a23-e55da95ccadd" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>Stateless Authentication:</strong> Server-side sessions are not needed, lowering server resource consumption.</li></ul><ul id="3fbe5180-b687-8050-8901-f099a27769d5" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>Token Rotation &amp; Blacklisting:</strong> Enables you to safely invalidate stolen tokens immediately by installing the built-in <code>rest_framework_simplejwt.token_blacklist</code> app.</li></ul><ul id="3fbe5180-b687-802f-9f85-f33a932e8b96" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>Custom Claims:</strong> Allows you to effortlessly inject custom user attributes (like <code>is_staff</code> or <code>role</code>) directly into the encoded token payload.</li></ul><hr id="3f1e5180-b687-800c-8de9-f5fdc25af183" dir="auto"/><h2 id="3f1e5180-b687-8033-af37-c8f7923547bc" class="" dir="auto">6. DRF Permissions (Concept Overview)</h2><h3 id="3f1e5180-b687-80fe-bf7d-e3ed0766d734" class="" dir="auto">6.1 Built-in Permission Classes</h3><pre id="3f1e5180-b687-8087-8c8c-c222c228075e" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">from rest_framework.permissions import (
+    AllowAny, IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly
+)</code></pre><h3 id="3f1e5180-b687-8005-93f9-e1e4888d614e" class="" dir="auto">6.2 Usage in Views</h3><pre id="3f1e5180-b687-8056-a118-f06331ca269f" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">class EmployeeViewSet(viewsets.ModelViewSet):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
+    permission_classes = [IsAuthenticated]</code></pre><h3 id="3f1e5180-b687-8084-9f05-cb07dff1b983" class="" dir="auto">6.3 Custom Permissions</h3><pre id="3f1e5180-b687-8016-9f4d-dbe2f8415ec1" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">from rest_framework.permissions import BasePermission
+
+class IsOwnerOrReadOnly(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in [&#x27;GET&#x27;, &#x27;HEAD&#x27;, &#x27;OPTIONS&#x27;]:
+            return True
+        return obj.owner == request.user</code></pre><hr id="3f1e5180-b687-808f-a35f-cf9301a19a6c" dir="auto"/><h2 id="3f1e5180-b687-80af-a21a-cd2e7471c4c2" class="" dir="auto">7. Pagination (Concept Overview)</h2><h3 id="3f1e5180-b687-8094-bbf7-dac979ade491" class="" dir="auto">7.1 Settings.py</h3><pre id="3f1e5180-b687-8076-b70f-d81091f490e7" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">REST_FRAMEWORK = {
+    &#x27;DEFAULT_PAGINATION_CLASS&#x27;: &#x27;rest_framework.pagination.PageNumberPagination&#x27;,
+    &#x27;PAGE_SIZE&#x27;: 10,
+}</code></pre><h3 id="3f1e5180-b687-8058-849f-ecb6d942b2f7" class="" dir="auto">7.2 Response Format</h3><pre id="3f1e5180-b687-8035-9e26-c606e462ef9a" class="code code-wrap" data-notion-code-syntax="json"><code class="language-json" style="white-space:pre-wrap;word-break:break-all">{
+    &quot;count&quot;: 100,
+    &quot;next&quot;: &quot;&lt;http://api.example.com/employees/?page=2&gt;&quot;,
+    &quot;previous&quot;: null,
+    &quot;results&quot;: [...]
+}</code></pre><hr id="3f1e5180-b687-8002-aef1-c5640d9e2cbc" dir="auto"/><h2 id="3f1e5180-b687-80e4-9464-e9298085e439" class="" dir="auto">8. Filtering, Searching, Ordering</h2><h3 id="3f1e5180-b687-8079-9bd2-dc13f05de253" class="" dir="auto">8.1 Install</h3><pre id="3f1e5180-b687-80e9-a490-c8541cc8a262" class="code code-wrap" data-notion-code-syntax="bash"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">pip install django-filter</code></pre><h3 id="3f1e5180-b687-8060-922b-ebe66a7a8085" class="" dir="auto">8.2 Settings.py</h3><pre id="3f1e5180-b687-800e-964a-ec2d489bcc9d" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">INSTALLED_APPS = [
+		&#x27;django_filters&#x27;,
+]
+
+REST_FRAMEWORK = {
+    &#x27;DEFAULT_FILTER_BACKENDS&#x27;: [
+        &#x27;django_filters.rest_framework.DjangoFilterBackend&#x27;,
+        &#x27;rest_framework.filters.SearchFilter&#x27;,
+        &#x27;rest_framework.filters.OrderingFilter&#x27;,
+    ],
+}</code></pre><h3 id="3f1e5180-b687-807d-ab41-c485e9c8eec4" class="" dir="auto">8.3 Usage</h3><pre id="3f1e5180-b687-806f-8e19-d86b9349d155" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
+
+class EmployeeViewSet(viewsets.ModelViewSet):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
+    filterset_fields = [&#x27;designation&#x27;]
+    filter_backends = [SearchFilter, DjangoFilterBackend]
+    search_fields = [&#x27;emp_name&#x27;]</code></pre><hr id="3f1e5180-b687-8024-9d78-f27e71622bcc" dir="auto"/><h2 id="3f1e5180-b687-8020-83a5-fd5d2e33af20" class="" dir="auto">9. Throttling (Rate Limiting)</h2><h3 id="3f1e5180-b687-8015-8ff5-d889f5834c31" class="" dir="auto">9.1 Settings</h3><pre id="3f1e5180-b687-807b-a29c-c94d1f92a5a6" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">REST_FRAMEWORK = {
+    &#x27;DEFAULT_THROTTLE_CLASSES&#x27;: [
+        &#x27;rest_framework.throttling.AnonRateThrottle&#x27;,
+        &#x27;rest_framework.throttling.UserRateThrottle&#x27;,
+    ],
+    &#x27;DEFAULT_THROTTLE_RATES&#x27;: {
+        &#x27;anon&#x27;: &#x27;100/day&#x27;,
+        &#x27;user&#x27;: &#x27;1000/day&#x27;,
+    },
+}</code></pre><hr id="3f1e5180-b687-803b-8e06-e0b35a78c1ab" dir="auto"/><h2 id="3f1e5180-b687-8043-9496-d345414b347e" class="" dir="auto">10. Custom User Model (Mentioned in Transcript)</h2><p id="3f1e5180-b687-802e-b40b-ddb39211d848" class="" dir="auto">The instructor mentions:</p><blockquote id="3f1e5180-b687-807c-b72f-ee3800ed2a76" class="" dir="auto"><em>&quot;If you want to add mobile number or change login from username to email, extend the user model. I have a video on this.&quot;</em></blockquote><h3 id="3f1e5180-b687-80b9-bd1e-c0cb88db76bc" class="" dir="auto">10.1 Why Custom User Model?</h3><ul id="3f1e5180-b687-805e-91f6-f0eb0ca0a3fc" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Default user uses <strong>username</strong> for login</li></ul><ul id="3f1e5180-b687-80a1-94c9-c3722b2cc65f" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Many apps want <strong>email</strong> as login</li></ul><ul id="3f1e5180-b687-8018-927b-c7b796b9b912" class="bulleted-list" dir="auto"><li style="list-style-type:disc">May need extra fields (phone, address, etc.)</li></ul><h3 id="3f1e5180-b687-80b5-a908-d4fb4765910b" class="" dir="auto">10.2 Quick Example</h3><pre id="3f1e5180-b687-80c6-b7ec-ea41a15aa174" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">from django.contrib.auth.models import AbstractUser
+
+class CustomUser(AbstractUser):
+    email = models.EmailField(unique=True)
+    phone = models.CharField(max_length=15, blank=True)
+
+    USERNAME_FIELD = &#x27;email&#x27;
+    REQUIRED_FIELDS = [&#x27;username&#x27;]</code></pre><h3 id="3f1e5180-b687-802e-a86c-e7c82b585d19" class="" dir="auto">10.3 Settings</h3><pre id="3f1e5180-b687-8022-ba69-e228fadba856" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">AUTH_USER_MODEL = &#x27;accounts.CustomUser&#x27;</code></pre><p id="3f1e5180-b687-8021-a5a9-ef2453863893" class="" dir="auto"><strong>Important:</strong> Must be set <strong>before</strong> running migrations.</p><hr id="3f1e5180-b687-8054-b67c-e5ba0cc0c06f" dir="auto"/><h2 id="3f1e5180-b687-8076-bd0c-d216d3b70d9d" class="" dir="auto">11. Full Project Flow (Recap)</h2><pre id="3f1e5180-b687-80c0-b3f8-d1aa215bc353" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">1. Create virtual environment
+2. Install Django + DRF
+3. Create project + app(s)
+4. Configure settings.py
+5. Create models
+6. makemigrations + migrate
+7. Register in admin
+8. Create serializer
+9. Create URL patterns
+10. Create views (function → class → mixins → generics → viewsets)
+11. Test with Postman / Browsable API
+12. Add authentication (JWT)
+13. Add permissions
+14. Add pagination, filtering
+15. Deploy</code></pre><hr id="3f1e5180-b687-8083-8a7f-d92a26cea2ce" dir="auto"/><h2 id="3f1e5180-b687-80f4-8afa-f2f290c641cb" class="" dir="auto">12. What the Instructor Says Comes Next</h2><p id="3f1e5180-b687-80f4-9c35-ec5bf5ef4569" class="" dir="auto">From the transcript:</p><table id="3f1e5180-b687-806a-957b-e0ebf35aa627" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3f1e5180-b687-800d-80f6-f83852d57510" dir="ltr"><th id="F_::" class="simple-table-header-color simple-table-header">Week</th><th id="&gt;ce[" class="simple-table-header-color simple-table-header">Topic</th></tr></thead><tbody><tr id="3f1e5180-b687-8097-ad88-c4a44bee5eef" dir="ltr"><td id="F_::" class="">Week 1–2</td><td id="&gt;ce[" class="">Django basics, models, views, templates</td></tr><tr id="3f1e5180-b687-8024-bcb4-d63152cd2b4a" dir="ltr"><td id="F_::" class="">Week 3</td><td id="&gt;ce[" class="">DRF — serializers, function-based APIs, class-based views, mixins, generics</td></tr><tr id="3f1e5180-b687-80ed-a91e-c471112d0532" dir="ltr"><td id="F_::" class="">Week 4+</td><td id="&gt;ce[" class="">ViewSets, Routers, JWT, Permissions, Real Project</td></tr><tr id="3f1e5180-b687-8038-9e0e-f0708f7cfebb" dir="ltr"><td id="F_::" class="">Later</td><td id="&gt;ce[" class="">E-commerce project, Docker, CI/CD, GitHub Actions, AWS S3, Deployment</td></tr></tbody></table><hr id="3f1e5180-b687-802c-8f4d-df9627ea9ae6" dir="auto"/><h2 id="3f1e5180-b687-8001-909d-f24353ab3b18" class="" dir="auto">13. Key Takeaways from the Entire Course</h2><h3 id="3f1e5180-b687-80cc-8424-e1a9c2a466e5" class="" dir="auto">13.1 Django Core</h3><ul id="3f1e5180-b687-8095-b6dc-fabd0f0a9cf9" class="bulleted-list" dir="auto"><li style="list-style-type:disc">MVT architecture — Model never talks to Template directly</li></ul><ul id="3f1e5180-b687-80c6-a2ad-f8e83ec87016" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Always use virtual environments</li></ul><ul id="3f1e5180-b687-807c-89a8-c1053ae68a5f" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Migrations are auto-generated blueprints for the database</li></ul><ul id="3f1e5180-b687-806a-a0c7-d90b1b3a3b65" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>get_object_or_404</code> handles missing objects gracefully</li></ul><ul id="3f1e5180-b687-80b8-a77e-e078eb057e68" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>@login_required</code> protects views</li></ul><ul id="3f1e5180-b687-80cd-a099-dc2dc9776e14" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Context processors provide <code>user</code> to all templates</li></ul><h3 id="3f1e5180-b687-8054-9193-e0ca4749561e" class="" dir="auto">13.2 DRF</h3><ul id="3f1e5180-b687-8000-b536-f5bb2bf9932f" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>Serialization</strong> = model → JSON</li></ul><ul id="3f1e5180-b687-80ca-b3b2-e048010823a7" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>Deserialization</strong> = JSON → model</li></ul><ul id="3f1e5180-b687-8097-baef-d637aafde8ce" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Always return proper <strong>HTTP status codes</strong></li></ul><ul id="3f1e5180-b687-8089-9bd9-c4654ae99002" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Use <code>many=True</code> when serializing querysets</li></ul><ul id="3f1e5180-b687-80eb-8dc2-c8caf1bd5998" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>request.data</code> = incoming data</li></ul><ul id="3f1e5180-b687-8041-829c-f404660311ff" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>serializer.data</code> = outgoing data</li></ul><ul id="3f1e5180-b687-8075-8655-e828647c6b32" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>@api_view</code> decorator is <strong>mandatory</strong> for function-based API views</li></ul><ul id="3f1e5180-b687-800b-89f5-e39266c174b9" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Use <code>.as_view()</code> for class-based views in URLs</li></ul><h3 id="3f1e5180-b687-8031-b073-ca5450173244" class="" dir="auto">13.3 Choosing the Right Approach</h3><table id="3f1e5180-b687-804b-ad96-e52c797f1842" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3f1e5180-b687-8013-aef7-fed4b6722fb1" dir="ltr"><th id="|;ap" class="simple-table-header-color simple-table-header">Situation</th><th id="^AoV" class="simple-table-header-color simple-table-header">Use</th></tr></thead><tbody><tr id="3f1e5180-b687-804b-a1d2-ee694abcc5d2" dir="ltr"><td id="|;ap" class="">Complex custom logic</td><td id="^AoV" class="">Function-Based or APIView</td></tr><tr id="3f1e5180-b687-802c-b4d1-c2baaa11652e" dir="ltr"><td id="|;ap" class="">Standard CRUD with some logic</td><td id="^AoV" class="">Mixins + Generics</td></tr><tr id="3f1e5180-b687-80ad-8713-c2cb704f0050" dir="ltr"><td id="|;ap" class="">Pure standard CRUD</td><td id="^AoV" class="">Generic Classes or ViewSets</td></tr><tr id="3f1e5180-b687-8095-b954-cb2b0834840b" dir="ltr"><td id="|;ap" class="">Quick prototype</td><td id="^AoV" class="">ViewSets + Routers</td></tr></tbody></table><h3 id="3f1e5180-b687-805d-8afa-d05e49c8ad56" class="" dir="auto">13.4 Instructor&#x27;s Golden Rule</h3><blockquote id="3f1e5180-b687-8057-8dd4-d56f0b6a591e" class="" dir="auto"><em>&quot;Don&#x27;t just watch this course. Code along with me to get the most out of it.&quot;</em><p id="3f1e5180-b687-8048-a75b-c4c78b399315" class="" dir="auto"><em>&quot;If the logic is very complex, do not try to fit everything inside mixins. Use function-based views for full control.&quot;</em></p></blockquote><hr id="3f1e5180-b687-806c-809b-fed2d7e78bd2" dir="auto"/><h2 id="3f1e5180-b687-8054-b69e-cf4400e6e88b" class="" dir="auto">14. Final Code Cheat Sheet</h2><pre id="3f1e5180-b687-8048-a1fa-c63c3034738f" class="code code-wrap" data-notion-code-syntax="python"><code class="language-python" style="white-space:pre-wrap;word-break:break-all"># ============ MODELS ============
+class Employee(models.Model):
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    email = models.EmailField(unique=True)
+    salary = models.IntegerField()
+    joining_date = models.DateField()
+    is_active = models.BooleanField(default=True)
+    department = models.ForeignKey(&#x27;Department&#x27;, on_delete=models.SET_NULL, null=True)
+    manager = models.ForeignKey(&#x27;self&#x27;, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return f&quot;{self.first_name} {self.last_name}&quot;
+
+# ============ SERIALIZER ============
+class EmployeeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employee
+        fields = &#x27;__all__&#x27;
+
+# ============ FUNCTION-BASED VIEW ============
+@api_view([&#x27;GET&#x27;, &#x27;POST&#x27;])
+def employees_view(request):
+    if request.method == &#x27;GET&#x27;:
+        employees = Employee.objects.all()
+        serializer = EmployeeSerializer(employees, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    elif request.method == &#x27;POST&#x27;:
+        serializer = EmployeeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# ============ API VIEW (Class-Based) ============
+class EmployeesView(APIView):
+    def get(self, request):
+        employees = Employee.objects.all()
+        serializer = EmployeeSerializer(employees, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = EmployeeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# ============ GENERIC (Shortest for CRUD) ============
+class EmployeesView(generics.ListCreateAPIView):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
+
+class EmployeeDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
+
+# ============ VIEWSET (Most Concise) ============
+class EmployeeViewSet(viewsets.ModelViewSet):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
+
+# ============ ROUTER ============
+router = DefaultRouter()
+router.register(&#x27;employees&#x27;, EmployeeViewSet, basename=&#x27;employees&#x27;)
+urlpatterns = router.urls
+
+# ============ URLs ============
+path(&#x27;employees/&#x27;, views.EmployeesView.as_view()),
+path(&#x27;employees/&lt;int:pk&gt;/&#x27;, views.EmployeeDetailView.as_view()),</code></pre><hr id="3f1e5180-b687-80fb-bf50-e0b1cd1281e4" dir="auto"/><h2 id="3f1e5180-b687-8057-a66e-c1155851611c" class="" dir="auto">15. HTTP Status Codes Reference</h2><table id="3f1e5180-b687-8061-a5d4-faf7ba1ffdef" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3f1e5180-b687-80eb-8c88-e28a1fd41798" dir="ltr"><th id="CBnt" class="simple-table-header-color simple-table-header">Code</th><th id="Z@nT" class="simple-table-header-color simple-table-header">Meaning</th><th id=":uQy" class="simple-table-header-color simple-table-header">When to Use</th></tr></thead><tbody><tr id="3f1e5180-b687-802c-a55d-c9b157e0dde8" dir="ltr"><td id="CBnt" class="">200</td><td id="Z@nT" class="">OK</td><td id=":uQy" class="">GET success, PUT success</td></tr><tr id="3f1e5180-b687-8025-be0c-f11ab718fd20" dir="ltr"><td id="CBnt" class="">201</td><td id="Z@nT" class="">Created</td><td id=":uQy" class="">POST success</td></tr><tr id="3f1e5180-b687-803e-bc4c-d00b34c1f60d" dir="ltr"><td id="CBnt" class="">204</td><td id="Z@nT" class="">No Content</td><td id=":uQy" class="">DELETE success</td></tr><tr id="3f1e5180-b687-80d1-bcbc-fb86b72ee919" dir="ltr"><td id="CBnt" class="">400</td><td id="Z@nT" class="">Bad Request</td><td id=":uQy" class="">Validation errors</td></tr><tr id="3f1e5180-b687-80ec-9d11-e0f71c7a4bbf" dir="ltr"><td id="CBnt" class="">401</td><td id="Z@nT" class="">Unauthorized</td><td id=":uQy" class="">Not logged in</td></tr><tr id="3f1e5180-b687-8045-9ffd-d40b2dbaff76" dir="ltr"><td id="CBnt" class="">403</td><td id="Z@nT" class="">Forbidden</td><td id=":uQy" class="">Logged in but no permission</td></tr><tr id="3f1e5180-b687-8005-952f-ee6ca434d238" dir="ltr"><td id="CBnt" class="">404</td><td id="Z@nT" class="">Not Found</td><td id=":uQy" class="">Object doesn&#x27;t exist</td></tr><tr id="3f1e5180-b687-8076-8d59-e3f80cb6721e" dir="ltr"><td id="CBnt" class="">500</td><td id="Z@nT" class="">Internal Server Error</td><td id=":uQy" class="">Server-side bug</td></tr></tbody></table><hr id="3f1e5180-b687-808f-84b3-d003708996c7" dir="auto"/><p id="3f1e5180-b687-806b-9f75-ff4c0dc94cef" class="" dir="auto"><strong>End of Part 3 — and End of Complete Course Notes</strong></p><hr id="3f1e5180-b687-8042-9085-cb362bfad49c" dir="auto"/><h3 id="3f1e5180-b687-8044-af7e-f8b35551fbb6" class="" dir="auto">Summary of All Parts</h3><table id="3f1e5180-b687-80ff-94d7-d7bb4f8b0f59" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3f1e5180-b687-8004-9ab3-c7d91a8782dd" dir="ltr"><th id="DJGZ" class="simple-table-header-color simple-table-header">Part</th><th id="wbwj" class="simple-table-header-color simple-table-header">Topics</th></tr></thead><tbody><tr id="3f1e5180-b687-80d5-b06d-dd2d56e70113" dir="ltr"><td id="DJGZ" class="">Part 1</td><td id="wbwj" class="">Django fundamentals, MVT, models, migrations, admin, templates, static/media, forms, auth basics</td></tr><tr id="3f1e5180-b687-8073-93df-c191232fd1f2" dir="ltr"><td id="DJGZ" class="">Part 2</td><td id="wbwj" class="">Authentication, permissions, groups, DRF setup, serializers, function-based APIs, class-based APIs, mixins, generics</td></tr><tr id="3f1e5180-b687-80ae-a0e6-f14760250f8e" dir="ltr"><td id="DJGZ" class="">Part 3</td><td id="wbwj" class="">ViewSets, Routers, JWT, DRF permissions, pagination, filtering, custom user model, full project flow</td></tr></tbody></table><hr id="3f1e5180-b687-80ed-aade-dcf91ad7d4da" dir="auto"/><p id="3f1e5180-b687-80f9-98e8-f150f02a337a" class="" dir="auto"><strong>Revision Tip:</strong> Practice by rebuilding the Employee/Student project from scratch without looking at notes. Then try a new model (e.g., Books, Products) using all approaches — function-based, APIView, mixins, generics, and ViewSets.</p></div></details></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
